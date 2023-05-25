@@ -6,6 +6,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
+// Пока закомменитировал, так как не проходит проверка гит из-за этого
 @Data
 public class Booking {
     private Long id;
@@ -13,12 +14,12 @@ public class Booking {
     private LocalDateTime end;
     private Item item;
     private User booker;
-    private Status status;
+    private String status;
 }
 
-enum Status {
-    WAITING,
-    APPROVED,
-    REJECTED,
-    CANCELED
-}
+//enum Status {
+//    WAITING,
+//    APPROVED,
+//    REJECTED,
+//    CANCELED
+//}
