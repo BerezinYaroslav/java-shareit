@@ -1,15 +1,11 @@
-package ru.practicum.shareit.item.service;
+package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.ItemMapper;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto createItem(ItemDto itemDto, Long userId) {
         Optional<User> optionalUser = userRepository.getUser(userId);
-        Item item = ItemMapper.toItem(itemDto);
+        Item item = ItemMapper.toObject(itemDto);
 
         if (optionalUser.isEmpty()) {
             log.info("User with id " + userId + " not found");
@@ -34,7 +30,7 @@ public class ItemServiceImpl implements ItemService {
 
         item.setOwner(optionalUser.get());
         log.info("Item " + item.getName() + " created successfully");
-        return ItemMapper.toItemDto(itemRepository.createItem(item, optionalUser.get()));
+        return ItemMapper.toDto(itemRepository.createItem(item, optionalUser.get()));
     }
 
     @Override
@@ -47,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         log.info("Item with id " + itemId + " returned successfully");
-        return ItemMapper.toItemDto(optionalItem.get());
+        return ItemMapper.toDto(optionalItem.get());
     }
 
     @Override
@@ -55,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> itemsDto = new ArrayList<>();
 
         for (Item item : itemRepository.searchItem(text, userId)) {
-            itemsDto.add(ItemMapper.toItemDto(item));
+            itemsDto.add(ItemMapper.toDto(item));
         }
 
         log.info("Searched items returned successfully");
@@ -67,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> itemsDto = new ArrayList<>();
 
         for (Item item : itemRepository.getAllItems(userId)) {
-            itemsDto.add(ItemMapper.toItemDto(item));
+            itemsDto.add(ItemMapper.toDto(item));
         }
 
         log.info("All items returned successfully");
@@ -77,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(ItemDto itemDto, Long itemId, Long userId) {
         userRepository.getUser(userId);
-        Item itemForUpdate = ItemMapper.toItem(getItem(itemId, userId));
+        Item itemForUpdate = ItemMapper.toObject(getItem(itemId, userId));
 
         if (!itemForUpdate.getOwner().getId().equals(userId)) {
             log.info("Item with id " + itemId + " not found for getting");
@@ -97,7 +93,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         log.info("Item " + itemForUpdate.getName() + " updated successfully");
-        return ItemMapper.toItemDto(itemRepository.updateItem(itemForUpdate, itemId, userId));
+        return ItemMapper.toDto(itemRepository.updateItem(itemForUpdate, itemId, userId));
     }
 
     @Override
@@ -116,6 +112,6 @@ public class ItemServiceImpl implements ItemService {
         }
 
         log.info("Item with id " + itemId + " deleted successfully");
-        return ItemMapper.toItemDto(optionalItem.get());
+        return ItemMapper.toDto(optionalItem.get());
     }
 }

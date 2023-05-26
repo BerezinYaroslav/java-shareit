@@ -1,14 +1,10 @@
-package ru.practicum.shareit.user.service;
+package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.DuplicateException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +18,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = UserMapper.toUser(userDto);
+        User user = UserMapper.toObject(userDto);
 
         if (repository.checkDuplicateEmail(user.getEmail())) {
             log.info("User with email " + userDto.getEmail() + " already exists");
@@ -30,7 +26,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("User " + user.getName() + " created successfully");
-        return UserMapper.toUserDto(repository.createUser(user));
+        return UserMapper.toDto(repository.createUser(user));
     }
 
     @Override
@@ -43,7 +39,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("User with id " + id + " returned successfully");
-        return UserMapper.toUserDto(optionalUser.get());
+        return UserMapper.toDto(optionalUser.get());
     }
 
     @Override
@@ -51,7 +47,7 @@ public class UserServiceImpl implements UserService {
         List<UserDto> usersDto = new ArrayList<>();
 
         for (User user : repository.getAllUsers()) {
-            usersDto.add(UserMapper.toUserDto(user));
+            usersDto.add(UserMapper.toDto(user));
         }
 
         log.info("All users returned successfully");
@@ -60,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto, Long id) {
-        User userForUpdate = UserMapper.toUser(getUser(id));
+        User userForUpdate = UserMapper.toObject(getUser(id));
 
         if (userDto.getName() != null) {
             userForUpdate.setName(userDto.getName());
@@ -78,7 +74,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("User " + userForUpdate.getName() + " updated successfully");
-        return UserMapper.toUserDto(repository.updateUser(userForUpdate, id));
+        return UserMapper.toDto(repository.updateUser(userForUpdate, id));
     }
 
     @Override
@@ -91,6 +87,6 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("User with id " + id + " deleted successfully");
-        return UserMapper.toUserDto(optionalUser.get());
+        return UserMapper.toDto(optionalUser.get());
     }
 }
