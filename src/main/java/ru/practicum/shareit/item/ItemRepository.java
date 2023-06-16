@@ -1,20 +1,19 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-public interface ItemRepository {
-    Item createItem(Item item, User user);
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    Collection<Item> findAllByOwnerId(Long userId);
 
-    Optional<Item> getItem(Long itemId, Long userId);
+    @Query("select i from Item i where (lower(i.name) like lower(concat('%', ?1, '%')) " +
+            "or lower(i.description) like lower(concat('%', ?1, '%'))) and i.available=true")
+    Page<Item> findByNameOrDescriptionAvailable(String text, Pageable pageable);
 
-    List<Item> searchItem(String text, Long userId);
-
-    List<Item> getAllItems(Long userId);
-
-    Item updateItem(Item item, Long itemId, Long userId);
-
-    Optional<Item> deleteItem(Long itemId, Long userId);
+    List<Item> findAllByRequestId(Long requestId);
 }

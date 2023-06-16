@@ -8,7 +8,7 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getOwner(),
-                item.getRequest()
+                item.getRequest() != null ? item.getRequest().getId() : null
         );
     }
 
@@ -18,8 +18,18 @@ public class ItemMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                itemDto.getOwner(),
-                itemDto.getRequest()
+                itemDto.getOwner()
+        );
+    }
+
+    public static ItemForRequest toObjectForRequest(Item item) {
+        return new ItemForRequest(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getOwner().getId(),
+                item.getRequest() != null ? item.getRequest().getId() : null
         );
     }
 }
