@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public UserDto deleteUser(Long id) {
         if (userRepository.existsById(id)) {
             UserDto userDto = getUser(id);
-//            itemRepository.deleteAll(itemRepository.findAllByOwnerId(id));
+            itemRepository.deleteAll(itemRepository.findAllByOwnerId(id));
             userRepository.deleteById(id);
             return userDto;
         }
