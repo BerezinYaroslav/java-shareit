@@ -97,8 +97,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto updateItem(ItemDto itemDto, Long itemId, Long userId) {
-//        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
-        Optional<Item> optionalItem = itemRepository.findById(itemId);
+      Optional<Item> optionalItem = itemRepository.findById(itemId);
 
         if (optionalItem.isEmpty()) {
             throw new NotFoundException("item not found");
