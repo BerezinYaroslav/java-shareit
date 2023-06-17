@@ -31,7 +31,7 @@ public class ItemRequestServiceImpl implements ItemRequestsService {
     @Override
     public ItemRequestDto addRequest(Long id, ItemRequestDto itemRequestDto) {
         ItemRequest item = toObject(itemRequestDto);
-        item.setRequester(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not found")));
+        item.setRequestor(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not found")));
         item.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         return toDto(itemRequestsRepository.save(item));
     }

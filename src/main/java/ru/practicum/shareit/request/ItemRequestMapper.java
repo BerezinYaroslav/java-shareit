@@ -11,7 +11,7 @@ public class ItemRequestMapper {
         return new ItemRequestDto(
                 itemRequest.getId(),
                 itemRequest.getDescription(),
-                itemRequest.getRequester() != null ? itemRequest.getRequester() : null,
+                itemRequest.getRequestor() != null ? itemRequest.getRequestor() : null,
                 itemRequest.getCreated()
         );
     }
