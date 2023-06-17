@@ -17,20 +17,19 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "bookings", schema = "public")
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "start_date")
     private LocalDateTime start;
-
     @Column(name = "end_date")
     private LocalDateTime end;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "itemId")
     private Item item;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bookerId")
     private User booker;

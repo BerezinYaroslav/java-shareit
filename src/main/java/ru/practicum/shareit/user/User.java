@@ -9,6 +9,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+/**
+ * TODO Sprint add-controllers.
+ */
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,6 +20,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
