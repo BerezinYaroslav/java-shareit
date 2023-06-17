@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-
     List<Booking> findAllByBookerId(Long bookerId, Sort sort);
 
     List<Booking> findAllByBookerIdAndStatus(Long bookerId, Status status, Sort sort);
@@ -17,7 +15,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByBookerIdAndStartAfter(Long bookerId, LocalDateTime dateTime, Sort sort);
 
-    List<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Long bookerId, LocalDateTime dateTime, LocalDateTime dateTime1, Sort sort);
+    List<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Long bookerId, LocalDateTime dateTime,
+                                                             LocalDateTime dateTime1, Sort sort);
 
     List<Booking> findByItemId(Long itemId, Sort sort);
 

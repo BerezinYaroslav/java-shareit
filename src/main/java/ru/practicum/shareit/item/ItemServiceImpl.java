@@ -32,15 +32,10 @@ import static ru.practicum.shareit.user.UserMapper.toUser;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
     private final ItemRepository itemRepository;
-
     private final BookingRepository bookingRepository;
-
     private final CommentRepository commentRepository;
-
     private final UserService userService;
-
 
     public List<ItemDto> getItems(Long id) {
         List<ItemDto> dtoList = itemRepository.findAllByOwnerId(id).stream()
@@ -61,12 +56,14 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
+
         return itemRepository.findByNameOrDescriptionAvailable(text)
                 .stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
     public ItemDto updateItem(Long id, ItemDto itemDto, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
+
         if (item.getOwner().getId() != id.longValue()) {
             throw new NotFoundException("Another owner!");
         }
@@ -79,6 +76,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getAvailable() != null) {
             item.setAvailable(itemDto.getAvailable());
         }
+
         return toItemDto(itemRepository.save(item));
     }
 
@@ -95,6 +93,7 @@ public class ItemServiceImpl implements ItemService {
         comment.setItem((itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("No such item"))));
         if (!bookingRepository.existsByBookerIdAndEndBeforeAndStatus(userId, LocalDateTime.now(), Status.APPROVED)) {
+
             throw new NotAvailableException("You cant comment before use!");
         }
 
@@ -120,12 +119,11 @@ public class ItemServiceImpl implements ItemService {
                     .findFirst().orElse(null));
             return itemDto;
         }
+
         return itemDto;
     }
 
     public List<CommentDto> getComments(Long itemId) {
-        return commentRepository
-                .findByItemId(itemId).stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
+        return commentRepository.findByItemId(itemId).stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
-
 }
