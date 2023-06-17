@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
@@ -16,6 +17,7 @@ import static ru.practicum.shareit.user.UserMapper.toUserDto;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    @Autowired
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
