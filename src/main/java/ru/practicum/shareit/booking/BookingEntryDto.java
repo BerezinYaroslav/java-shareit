@@ -24,4 +24,6 @@ public class BookingEntryDto {
 
     @NotNull
     private Long itemId;
+
+
 }

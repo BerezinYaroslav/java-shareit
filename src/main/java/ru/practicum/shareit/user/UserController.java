@@ -11,6 +11,7 @@ import java.util.List;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService service;
 
     @GetMapping
@@ -34,8 +35,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable Long userId,
-                              @RequestBody UserDto user) throws DuplicateException {
+    public UserDto updateUser(@PathVariable Long userId, @RequestBody UserDto user) throws DuplicateException {
         return service.updateUser(userId, user);
     }
 }

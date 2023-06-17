@@ -23,6 +23,7 @@ import static ru.practicum.shareit.booking.BookingMapper.toBookingDto;
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
+
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -32,7 +33,6 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto addBooking(Long id, BookingEntryDto bookingDto) {
         validateDate(bookingDto);
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("item not found"));
-
         if (id == item.getOwner().getId().longValue()) {
             throw new NotFoundException("YOu cant book your own item");
         }
@@ -59,9 +59,7 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found");
         }
-
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
-
         if (booking.getItem().getOwner().getId().longValue() != id.longValue()) {
             throw new NotFoundException("Ur not the owner!");
         }
@@ -75,7 +73,6 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-
         return toBookingDto(bookingRepository.save(booking));
     }
 
@@ -85,13 +82,10 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found");
         }
-
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
-
         if (booking.getItem().getOwner().getId() != id.longValue() && booking.getBooker().getId() != id.longValue()) {
             throw new NotFoundException("Ur not the owner or booker!");
         }
-
         return toBookingDto(booking);
     }
 
@@ -100,11 +94,9 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found!");
         }
-
         List<Booking> bookingList = new ArrayList<>();
         Sort sort = Sort.by(Sort.Direction.DESC, "start");
         LocalDateTime now = LocalDateTime.now();
-
         switch (convert(state)) {
             case ALL:
                 bookingList = bookingRepository.findAllByBookerId(id, sort);
@@ -125,7 +117,6 @@ public class BookingServiceImpl implements BookingService {
                 bookingList = bookingRepository.findAllByBookerIdAndStatus(id, Status.REJECTED, sort);
                 break;
         }
-
         return bookingList.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
     }
 
@@ -133,11 +124,9 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found!");
         }
-
         List<Booking> bookingList = new ArrayList<>();
         Sort sort = Sort.by(Sort.Direction.DESC, "start");
         LocalDateTime now = LocalDateTime.now();
-
         switch (convert(state)) {
             case ALL:
                 bookingList = bookingRepository.findAllByItemOwnerId(id, sort);
@@ -158,7 +147,6 @@ public class BookingServiceImpl implements BookingService {
                 bookingList = bookingRepository.findAllByItemOwnerIdAndStatus(id, Status.REJECTED, sort);
                 break;
         }
-
         return bookingList.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
     }
 

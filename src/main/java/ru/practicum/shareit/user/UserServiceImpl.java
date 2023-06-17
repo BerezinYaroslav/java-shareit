@@ -17,6 +17,8 @@ import static ru.practicum.shareit.user.UserMapper.toUserDto;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+
     @Autowired
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -58,4 +60,6 @@ public class UserServiceImpl implements UserService {
         }
         return !userRepository.existsById(userId);
     }
+
+
 }

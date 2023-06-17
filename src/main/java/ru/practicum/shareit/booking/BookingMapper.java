@@ -32,4 +32,5 @@ public class BookingMapper {
                 .end(booking.getEnd())
                 .build();
     }
+
 }
