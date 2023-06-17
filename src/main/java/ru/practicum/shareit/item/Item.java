@@ -29,7 +29,11 @@ public class Item {
 
 
     @OneToOne(fetch = FetchType.EAGER)
+<<<<<<< HEAD
     @JoinColumn(name = "ownerId")
+=======
+    @JoinColumn(name = "user_id")
+>>>>>>> 32cb065fbebcb3792d0e86160532c75b0142843d
     private User owner;
 
     @ManyToOne(fetch = FetchType.EAGER)
