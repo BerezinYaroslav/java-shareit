@@ -11,7 +11,6 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 public class BookingController {
-
     private final BookingService bookingService;
 
     @PostMapping()
@@ -22,18 +21,20 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDto approveBooking(@RequestHeader("X-Sharer-User-Id") Long id,
-                                     @PathVariable Long bookingId, @RequestParam Boolean approved) {
+                                     @PathVariable Long bookingId,
+                                     @RequestParam Boolean approved) {
         return bookingService.approveBooking(id, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
-    public BookingDto getBookingById(@RequestHeader("X-Sharer-User-Id") Long id, @PathVariable Long bookingId) {
+    public BookingDto getBookingById(@RequestHeader("X-Sharer-User-Id") Long id,
+                                     @PathVariable Long bookingId) {
         return bookingService.getBookingById(id, bookingId);
     }
 
     @GetMapping()
     public List<BookingDto> getAllBookingByState(@RequestHeader("X-Sharer-User-Id") Long id,
-                                                 @RequestParam(defaultValue = "ALL") String state)  {
+                                                 @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getAllBookingByState(id, state);
     }
 

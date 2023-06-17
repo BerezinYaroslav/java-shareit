@@ -32,15 +32,10 @@ import static ru.practicum.shareit.user.UserMapper.toUser;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
     private final ItemRepository itemRepository;
-
     private final BookingRepository bookingRepository;
-
     private final CommentRepository commentRepository;
-
     private final UserService userService;
-
 
     public List<ItemDto> getItems(Long id) {
         List<ItemDto> dtoList = itemRepository.findAllByOwnerId(id).stream()
@@ -127,5 +122,4 @@ public class ItemServiceImpl implements ItemService {
         return commentRepository
                 .findByItemId(itemId).stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
-
 }

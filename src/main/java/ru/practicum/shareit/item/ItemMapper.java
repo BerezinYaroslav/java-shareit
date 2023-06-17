@@ -4,9 +4,7 @@ import ru.practicum.shareit.request.ItemRequest;
 
 import java.util.HashMap;
 
-
 public class ItemMapper {
-
     private static final HashMap<Long, ItemRequest> requests = new HashMap<>();
 
     public static ItemDto toItemDto(Item item) {

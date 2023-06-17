@@ -1,14 +1,13 @@
 package ru.practicum.shareit.item;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
-
-/**
- * TODO Sprint add-controllers.
- */
 
 @Data
 @Builder
@@ -17,7 +16,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "items")
 public class Item {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +28,6 @@ public class Item {
 
     @Column(name = "is_available")
     private Boolean available;
-
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ownerId")
