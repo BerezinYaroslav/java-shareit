@@ -28,7 +28,7 @@ public class Item {
     private Boolean available;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ownerId")
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @ManyToOne(fetch = FetchType.EAGER)
