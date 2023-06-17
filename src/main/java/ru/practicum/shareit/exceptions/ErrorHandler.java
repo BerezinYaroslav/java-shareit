@@ -43,5 +43,4 @@ public class ErrorHandler {
     public ErrorResponse handleWrongState(final NotSupportedStateException e) {
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }
-
 }
