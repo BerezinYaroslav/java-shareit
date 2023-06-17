@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.comment.CommentMapper.toDto;
@@ -96,7 +97,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto updateItem(ItemDto itemDto, Long itemId, Long userId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
+//        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
+        Optional<Item> optionalItem = itemRepository.findById(itemId);
+
+        if (optionalItem.isEmpty()) {
+            throw new NotFoundException("item not found");
+        }
+
+        Item item = optionalItem.get();
 
         if (item.getOwner().getId() != userId.longValue()) {
             throw new NotFoundException("Another owner!");
