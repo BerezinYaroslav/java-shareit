@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.request.ItemRequest;
@@ -8,7 +9,12 @@ import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
 
+/**
+ * TODO Sprint add-controllers.
+ */
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,24 +33,11 @@ public class Item {
     @Column(name = "is_available")
     private Boolean available;
 
-
     @OneToOne(fetch = FetchType.EAGER)
-<<<<<<< HEAD
     @JoinColumn(name = "ownerId")
-=======
-    @JoinColumn(name = "user_id")
->>>>>>> 32cb065fbebcb3792d0e86160532c75b0142843d
     private User owner;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "request_id")
     private ItemRequest request;
-
-    public Item(Long id, String name, String description, Boolean available, User owner) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.owner = owner;
-    }
 }

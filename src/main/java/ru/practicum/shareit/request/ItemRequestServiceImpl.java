@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.ItemForRequest;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
@@ -30,12 +30,12 @@ public class ItemRequestServiceImpl implements ItemRequestsService {
 
     @Override
     public ItemRequestDto addRequest(Long id, ItemRequestDto itemRequestDto) {
-        ItemRequest item = toObject(itemRequestDto);
-        item.setRequestor(userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not found")));
+        ItemRequest item = toRequest(itemRequestDto);
+        item.setRequestor(userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User Not found!")));
         item.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        return toDto(itemRequestsRepository.save(item));
+        return toRequestDto(itemRequestsRepository.save(item));
     }
-
 
     @Override
     public List<ItemRequestWithItems> getOwnRequests(Long id, int from, int size) throws ValidationException {
@@ -47,8 +47,8 @@ public class ItemRequestServiceImpl implements ItemRequestsService {
         }
 
         Pageable pageable = PageRequest.of(from, size).withSort(Sort.by("created").descending());
-        Page<ItemRequestWithItems> requests = itemRequestsRepository.findByRequester_id(id, pageable)
-                .map(this::setItems);
+        Page<ItemRequestWithItems> requests = itemRequestsRepository
+                .findByRequestor_id(id, pageable).map(this::setItems);
         return requests.stream().collect(Collectors.toList());
     }
 
@@ -62,7 +62,7 @@ public class ItemRequestServiceImpl implements ItemRequestsService {
         }
 
         Pageable pageable = PageRequest.of(from, size).withSort(Sort.by("created").descending());
-        return itemRequestsRepository.findAllByRequesterIdNot(id, pageable)
+        return itemRequestsRepository.findAllByRequestorIdNot(id, pageable)
                 .map(this::setItems).stream().collect(Collectors.toList());
     }
 
@@ -73,14 +73,16 @@ public class ItemRequestServiceImpl implements ItemRequestsService {
         }
 
         return itemRequestsRepository.findById(requestId)
-                .map(this::setItems).orElseThrow(() -> new NotFoundException("Request not found!"));
+                .map(this::setItems)
+                .orElseThrow(() -> new NotFoundException("Request not found!"));
     }
 
 
     private ItemRequestWithItems setItems(ItemRequest itemRequest) {
-        ItemRequestWithItems request = toObjectWith(itemRequest);
-        List<ItemForRequest> items = itemRepository.findAllByRequestId(itemRequest.getId()).stream()
-                .map(ItemMapper::toObjectForRequest).collect(Collectors.toList());
+        ItemRequestWithItems request = toRequestWithItems(itemRequest);
+        List<ItemForRequest> items = itemRepository
+                .findAllByRequestId(itemRequest.getId())
+                .stream().map(ItemMapper::toItemForRequest).collect(Collectors.toList());
 
         if (items.isEmpty()) {
             request.setItems(new ArrayList<>());

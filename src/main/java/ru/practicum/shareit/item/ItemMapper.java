@@ -1,35 +1,33 @@
 package ru.practicum.shareit.item;
 
 public class ItemMapper {
-    public static ItemDto toDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getOwner(),
-                item.getRequest() != null ? item.getRequest().getId() : null
-        );
+    public static ItemDto toItemDto(Item item) {
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .owner(item.getOwner())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null).build();
     }
 
-    public static Item toObject(ItemDto itemDto) {
-        return new Item(
-                itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
-                itemDto.getOwner()
-        );
+    public static Item toItem(ItemDto itemDto) {
+        return Item.builder()
+                .id(itemDto.getId())
+                .name(itemDto.getName())
+                .owner(itemDto.getOwner())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable()).build();
     }
 
-    public static ItemForRequest toObjectForRequest(Item item) {
-        return new ItemForRequest(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getOwner().getId(),
-                item.getRequest() != null ? item.getRequest().getId() : null
-        );
+    public static ItemForRequest toItemForRequest(Item item) {
+        return ItemForRequest.builder()
+                .id(item.getId())
+                .ownerId(item.getOwner().getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(item.getRequest() != null ? item.getRequest().getId() : null)
+                .build();
     }
 }

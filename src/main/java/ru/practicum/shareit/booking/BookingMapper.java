@@ -1,35 +1,35 @@
 package ru.practicum.shareit.booking;
 
 public class BookingMapper {
-    public static Booking toObject(BookingDto bookingDto) {
-        return new Booking(
-                bookingDto.getId(),
-                bookingDto.getStart(),
-                bookingDto.getEnd(),
-                bookingDto.getItem(),
-                bookingDto.getBooker(),
-                bookingDto.getStatus()
-        );
+    public static Booking toBooking(BookingDto bookingDto) {
+        return Booking.builder()
+                .id(bookingDto.getId())
+                .item(bookingDto.getItem())
+                .booker(bookingDto.getBooker())
+                .start(bookingDto.getStart())
+                .end(bookingDto.getEnd())
+                .status(bookingDto.getStatus())
+                .build();
     }
 
-    public static BookingDto toDto(Booking booking) {
-        return new BookingDto(
-                booking.getId(),
-                booking.getStart(),
-                booking.getEnd(),
-                booking.getItem(),
-                booking.getBooker(),
-                booking.getStatus()
-        );
+    public static BookingDto toBookingDto(Booking booking) {
+        return BookingDto.builder()
+                .id(booking.getId())
+                .item(booking.getItem())
+                .booker(booking.getBooker())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .status(booking.getStatus())
+                .build();
     }
 
-    public static BookingItemDto toItemDto(Booking booking) {
-        return new BookingItemDto(
-                booking.getId(),
-                booking.getItem().getId(),
-                booking.getBooker().getId(),
-                booking.getStart(),
-                booking.getEnd()
-        );
+    public static BookingItemDto toItemBookingDto(Booking booking) {
+        return BookingItemDto.builder()
+                .id(booking.getId())
+                .itemId(booking.getItem().getId())
+                .bookerId(booking.getBooker().getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .build();
     }
 }

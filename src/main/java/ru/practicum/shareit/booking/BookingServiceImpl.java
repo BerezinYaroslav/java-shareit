@@ -7,20 +7,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.NotAvailableException;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.NotSupportedStateException;
+import ru.practicum.shareit.exceptions.NotAvailableException;
+import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.NotSupportedStateException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserRepository;
 
 import javax.transaction.Transactional;
-import javax.validation.ValidationException;
+import javax.xml.bind.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.booking.BookingMapper.toDto;
+import static ru.practicum.shareit.booking.BookingMapper.toBookingDto;
 
 @Slf4j
 @Service
@@ -43,14 +43,11 @@ public class BookingServiceImpl implements BookingService {
             throw new NotAvailableException("Not available");
         }
 
-        Booking booking = new Booking(
-                bookingDto.getStart(),
-                bookingDto.getEnd()
-        );
+        Booking booking = Booking.builder().start(bookingDto.getStart()).end(bookingDto.getEnd()).build();
         booking.setBooker(userRepository.findById(id).orElseThrow(() -> new NotFoundException("user not found")));
         booking.setItem(item);
         booking.setStatus(Status.WAITING);
-        return toDto(bookingRepository.save(booking));
+        return toBookingDto(bookingRepository.save(booking));
     }
 
     private void validateDate(BookingEntryDto bookingDto) {
@@ -66,8 +63,8 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("User not found");
         }
 
-
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
+
         if (booking.getItem().getOwner().getId().longValue() != id.longValue()) {
             throw new NotFoundException("Ur not the owner!");
         }
@@ -81,8 +78,7 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-
-        return toDto(bookingRepository.save(booking));
+        return toBookingDto(bookingRepository.save(booking));
     }
 
     @Transactional
@@ -98,7 +94,7 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Ur not the owner or booker!");
         }
 
-        return toDto(booking);
+        return toBookingDto(booking);
     }
 
     @Override
@@ -138,7 +134,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new NotSupportedStateException("Unknown state: " + state);
         }
 
-        return bookingList.stream().map(BookingMapper::toDto).collect(Collectors.toList());
+        return bookingList.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
     }
 
     public List<BookingDto> getAllOwnersBookingByState(Long id, String state, int from, int size) throws ValidationException {
@@ -177,7 +173,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new NotSupportedStateException("Unknown state: " + state);
         }
 
-        return bookingList.stream().map(BookingMapper::toDto).collect(Collectors.toList());
+        return bookingList.stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
     }
 
     private static State convert(String state) {

@@ -1,20 +1,20 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.comment.CommentDto;
+import ru.practicum.shareit.item.comment.CommentDto;
 
 import javax.xml.bind.ValidationException;
 import java.util.List;
 
 public interface ItemService {
-    ItemDto createItem(ItemDto itemDto, Long userId);
+    List<ItemDto> getItems(Long id);
 
-    ItemDto getItem(Long itemId, Long userId);
+    ItemDto getItemById(Long userId, Long itemId);
 
     List<ItemDto> searchItems(String text, int from, int size) throws ValidationException;
 
-    List<ItemDto> getAllItems(Long userId);
+    ItemDto updateItem(Long id, ItemDto itemDto, Long itemId);
 
-    ItemDto updateItem(ItemDto itemDto, Long itemId, Long userId);
+    ItemDto addItem(Long id, ItemDto itemDto);
 
     CommentDto addComment(Long id, Long itemId, CommentDto commentDto);
 }

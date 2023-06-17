@@ -1,6 +1,7 @@
-package ru.practicum.shareit.comment;
+package ru.practicum.shareit.item.comment;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.Item;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,14 +33,4 @@ public class Comment {
     private User author;
 
     private LocalDateTime created;
-
-    public Comment(String text) {
-        this.text = text;
-    }
-
-    public Comment(Long id, String text, LocalDateTime created) {
-        this.id = id;
-        this.text = text;
-        this.created = created;
-    }
 }

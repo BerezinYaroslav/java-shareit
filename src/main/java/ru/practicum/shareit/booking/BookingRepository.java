@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     Page<Booking> findAllByBookerId(Long bookerId, Pageable pageable);
 
@@ -18,10 +17,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Page<Booking> findAllByBookerIdAndStartAfter(Long bookerId, LocalDateTime dateTime, Pageable pageable);
 
-    Page<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Long bookerId,
-                                                             LocalDateTime dateTime,
-                                                             LocalDateTime dateTime1,
-                                                             Pageable pageable);
+    Page<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Long bookerId, LocalDateTime dateTime,
+                                                             LocalDateTime dateTime1, Pageable pageable);
 
     List<Booking> findByItemId(Long itemId, Sort sort);
 
@@ -35,8 +32,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Page<Booking> findAllByItemOwnerIdAndStartAfter(Long ownerId, LocalDateTime dateTime, Pageable pageable);
 
-    Page<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfter(Long ownerId,
-                                                                LocalDateTime dateTime,
-                                                                LocalDateTime dateTime1,
-                                                                Pageable pageable);
+    Page<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfter(Long ownerId, LocalDateTime dateTime,
+                                                                LocalDateTime dateTime1, Pageable pageable);
 }

@@ -1,35 +1,37 @@
 package ru.practicum.shareit.request;
 
-import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.user.UserService;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
 public class ItemRequestMapper {
-    public static ItemRequestDto toDto(ItemRequest itemRequest) {
-        return new ItemRequestDto(
-                itemRequest.getId(),
-                itemRequest.getDescription(),
-                itemRequest.getRequestor() != null ? itemRequest.getRequestor() : null,
-                itemRequest.getCreated()
-        );
+    private UserService userService;
+
+    public static ItemRequestDto toRequestDto(ItemRequest itemRequest) {
+        return ItemRequestDto.builder()
+                .id(itemRequest.getId())
+                .description(itemRequest.getDescription())
+                .requestor(itemRequest.getRequestor() != null ? itemRequest.getRequestor() : null)
+                .created(itemRequest.getCreated())
+                .build();
     }
 
-    public static ItemRequest toObject(ItemRequestDto itemRequestDto) {
-        return new ItemRequest(
-                itemRequestDto.getId(),
-                itemRequestDto.getDescription(),
-                itemRequestDto.getRequester() != null ? itemRequestDto.getRequester() : null,
-                itemRequestDto.getCreated() != null ? itemRequestDto.getCreated() : Timestamp.valueOf(LocalDateTime.now())
-        );
+    public static ItemRequest toRequest(ItemRequestDto itemRequestDto) {
+        return ItemRequest.builder()
+                .id(itemRequestDto.getId())
+                .description(itemRequestDto.getDescription())
+                .created(itemRequestDto.getCreated() != null ? itemRequestDto.getCreated()
+                        : Timestamp.valueOf(LocalDateTime.now()))
+                .requestor(itemRequestDto.getRequestor() != null ? itemRequestDto.getRequestor() : null)
+                .build();
     }
 
-    public static ItemRequestWithItems toObjectWith(ItemRequest itemRequest) {
-        return new ItemRequestWithItems(
-                itemRequest.getId(),
-                itemRequest.getDescription(),
-                itemRequest.getCreated()
-        );
+    public static ItemRequestWithItems toRequestWithItems(ItemRequest itemRequest) {
+        return ItemRequestWithItems.builder()
+                .id(itemRequest.getId())
+                .created(itemRequest.getCreated())
+                .description(itemRequest.getDescription())
+                .build();
     }
 }
