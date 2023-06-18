@@ -33,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
         validateDate(bookingDto);
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("item not found"));
 
-        if (id == item.getOwner().getId().longValue()) {
+        if (id.equals(item.getOwner().getId())) {
             throw new NotFoundException("YOu cant book your own item");
         }
         if (!item.getAvailable()) {
@@ -62,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
 
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
 
-        if (booking.getItem().getOwner().getId().longValue() != id.longValue()) {
+        if (!booking.getItem().getOwner().getId().equals(id)) {
             throw new NotFoundException("Ur not the owner!");
         }
         if (booking.getStatus().equals(Status.APPROVED)) {
@@ -70,8 +70,6 @@ public class BookingServiceImpl implements BookingService {
         }
         if (approved) {
             booking.setStatus(Status.APPROVED);
-            Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow();
-            itemRepository.save(item);
         } else {
             booking.setStatus(Status.REJECTED);
         }
@@ -88,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
 
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
 
-        if (booking.getItem().getOwner().getId() != id.longValue() && booking.getBooker().getId() != id.longValue()) {
+        if (!booking.getItem().getOwner().getId().equals(id) && !booking.getBooker().getId().equals(id)) {
             throw new NotFoundException("Ur not the owner or booker!");
         }
 

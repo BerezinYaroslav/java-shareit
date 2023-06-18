@@ -56,13 +56,13 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.findByNameOrDescriptionAvailable(text)
+        return itemRepository.findByNameOrDescriptionAndAvailable(text)
                 .stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
     public ItemDto updateItem(Long id, ItemDto itemDto, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
-        if (item.getOwner().getId() != id.longValue()) {
+        if (!item.getOwner().getId().equals(id)) {
             throw new NotFoundException("Another owner!");
         }
         if (itemDto.getName() != null) {
@@ -98,24 +98,32 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto setBookings(ItemDto itemDto, Long userId) {
-        if (itemDto.getOwner().getId().longValue() == userId.longValue()) {
-            itemDto.setLastBooking(bookingRepository
-                    .findByItemId(itemDto.getId(), Sort.by(Sort.Direction.DESC, "start"))
-                    .stream()
-                    .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                    .map(BookingMapper::toItemBookingDto)
-                    .max(Comparator.comparing(BookingItemDto::getEnd))
-                    .orElse(null));
-            itemDto.setNextBooking(bookingRepository
-                    .findByItemId(itemDto.getId(), Sort.by(Sort.Direction.ASC, "start"))
-                    .stream()
-                    .filter(booking -> !booking.getStatus().equals(Status.REJECTED))
-                    .map(BookingMapper::toItemBookingDto)
-                    .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                    .findFirst().orElse(null));
+        if (itemDto.getOwner().getId().equals(userId)) {
+            itemDto.setLastBooking(findLastBooking(itemDto));
+            itemDto.setNextBooking(findNextBooking(itemDto));
             return itemDto;
         }
         return itemDto;
+    }
+
+    private BookingItemDto findLastBooking(ItemDto itemDto) {
+        return bookingRepository
+                .findByItemId(itemDto.getId(), Sort.by(Sort.Direction.DESC, "start"))
+                .stream()
+                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
+                .map(BookingMapper::toItemBookingDto)
+                .max(Comparator.comparing(BookingItemDto::getEnd))
+                .orElse(null);
+    }
+
+    private BookingItemDto findNextBooking(ItemDto itemDto) {
+        return bookingRepository
+                .findByItemId(itemDto.getId(), Sort.by(Sort.Direction.ASC, "start"))
+                .stream()
+                .filter(booking -> !booking.getStatus().equals(Status.REJECTED))
+                .map(BookingMapper::toItemBookingDto)
+                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
+                .findFirst().orElse(null);
     }
 
     public List<CommentDto> getComments(Long itemId) {
