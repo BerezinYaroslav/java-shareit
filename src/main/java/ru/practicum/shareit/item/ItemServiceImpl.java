@@ -2,9 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.BookingItemDto;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.Status;
@@ -19,7 +17,6 @@ import ru.practicum.shareit.user.UserService;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,33 +94,25 @@ public class ItemServiceImpl implements ItemService {
         return toCommentDto(commentRepository.save(comment));
     }
 
-    public ItemDto setBookings(ItemDto itemDto, Long userId) {
+    private ItemDto setBookings(ItemDto itemDto, Long userId) {
         if (itemDto.getOwner().getId().equals(userId)) {
-            itemDto.setLastBooking(findLastBooking(itemDto));
-            itemDto.setNextBooking(findNextBooking(itemDto));
+            itemDto.setLastBooking(bookingRepository
+                    .findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(itemDto.getId(),
+                            LocalDateTime.now(),
+                            Status.APPROVED)
+                    .map(BookingMapper::toItemBookingDto)
+                    .orElse(null));
+
+            itemDto.setNextBooking(bookingRepository
+                    .findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(itemDto.getId(),
+                            LocalDateTime.now(),
+                            Status.APPROVED)
+                    .map(BookingMapper::toItemBookingDto)
+                    .orElse(null));
+
             return itemDto;
         }
         return itemDto;
-    }
-
-    private BookingItemDto findLastBooking(ItemDto itemDto) {
-        return bookingRepository
-                .findByItemId(itemDto.getId(), Sort.by(Sort.Direction.DESC, "start"))
-                .stream()
-                .filter(booking -> booking.getStart().isBefore(LocalDateTime.now()))
-                .map(BookingMapper::toItemBookingDto)
-                .max(Comparator.comparing(BookingItemDto::getEnd))
-                .orElse(null);
-    }
-
-    private BookingItemDto findNextBooking(ItemDto itemDto) {
-        return bookingRepository
-                .findByItemId(itemDto.getId(), Sort.by(Sort.Direction.ASC, "start"))
-                .stream()
-                .filter(booking -> !booking.getStatus().equals(Status.REJECTED))
-                .map(BookingMapper::toItemBookingDto)
-                .filter(booking -> booking.getStart().isAfter(LocalDateTime.now()))
-                .findFirst().orElse(null);
     }
 
     public List<CommentDto> getComments(Long itemId) {
