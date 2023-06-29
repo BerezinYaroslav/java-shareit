@@ -127,28 +127,39 @@ public class BookingServiceImplTests {
 
     @Test
     void addBooking_InvalidItemId() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(100L).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now()).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
+                .itemId(100L)
+                .start(LocalDateTime.now().minusHours(1))
+                .end(LocalDateTime.now()).build();
 
         assertThrows(NotFoundException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
 
     @Test
     void addBooking_OwnItem() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(1L).start(LocalDateTime.now().plusHours(1)).end(LocalDateTime.now().plusHours(2)).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
+                .itemId(1L).start(LocalDateTime.now().plusHours(1))
+                .end(LocalDateTime.now().plusHours(2)).build();
 
         assertThrows(NotFoundException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
 
     @Test
     void addBooking_Unavailable() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(3L).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now().minusHours(2)).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
+                .itemId(3L)
+                .start(LocalDateTime.now().minusHours(1))
+                .end(LocalDateTime.now().minusHours(2)).build();
 
         assertThrows(NotAvailableException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
 
     @Test
     void addBooking_InvalidDate() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(1L).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now().minusHours(2)).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
+                .itemId(1L)
+                .start(LocalDateTime.now().minusHours(1))
+                .end(LocalDateTime.now().minusHours(2)).build();
 
         assertThrows(NotAvailableException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
