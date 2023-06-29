@@ -25,7 +25,7 @@ public class CommentRepositoryIntegrationTests {
     private CommentRepository commentRepository;
 
     @Test
-    void testFindByItemId() {
+    void findByItemId() {
         User user = User.builder().name("TestUser").email("test@mail.com").build();
         entityManager.persist(user);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();

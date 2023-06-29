@@ -36,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
         validateDate(bookingDto);
 
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("item not found"));
-        if (id == item.getOwner().getId().longValue()) {
+        if (id.equals(item.getOwner().getId())) {
             throw new NotFoundException("YOu cant book your own item");
         }
         if (!item.getAvailable()) {
@@ -103,7 +103,7 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User not found!");
         }
-        if (from < 0 || size < 0) {
+        if (from < 0 || size <= 0) {
             throw new ValidationException("Not valid page");
         }
 

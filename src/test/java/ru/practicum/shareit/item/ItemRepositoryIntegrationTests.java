@@ -24,7 +24,7 @@ public class ItemRepositoryIntegrationTests {
     private ItemRepository itemRepository;
 
     @Test
-    public void testFindAllByOwnerId() {
+    public void findAllByOwnerId() {
         User user = User.builder().name("TestUser").email("test@mail.com").build();
         entityManager.persist(user);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
@@ -49,7 +49,7 @@ public class ItemRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindByNameOrDescriptionAvailable() {
+    public void findByNameOrDescriptionAvailable() {
         String text = "Дрель";
         Pageable pageable = PageRequest.of(0, 10);
         Item item1 = Item.builder().name("Дрель").description("Эллектрическая дрель").available(true).build();
@@ -73,7 +73,7 @@ public class ItemRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByRequestId() {
+    public void findAllByRequestId() {
         ItemRequest itemRequest = ItemRequest.builder().build();
         entityManager.persist(itemRequest);
         ItemRequest itemRequest1 = ItemRequest.builder().build();

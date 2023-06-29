@@ -49,7 +49,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         Pageable pageable = PageRequest.of(from, size).withSort(Sort.by("created").descending());
         Page<ItemRequestWithItems> requests = itemRequestsRepository
-                .findByRequestor_id(id, pageable).map(this::setItems);
+                .findByRequestorId(id, pageable).map(this::setItems);
         return requests.stream().collect(Collectors.toList());
     }
 

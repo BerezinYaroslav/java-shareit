@@ -68,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        if (from < 0 || size < 0) {
+        if (from < 0 || size <= 0) {
             throw new ValidationException("Not valid page");
         }
 

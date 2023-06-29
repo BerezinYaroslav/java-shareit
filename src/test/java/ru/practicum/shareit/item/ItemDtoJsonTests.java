@@ -15,7 +15,7 @@ public class ItemDtoJsonTests {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void testSerializeToJson() throws JsonProcessingException {
+    public void serializeToJson() throws JsonProcessingException {
         User owner = User.builder()
                 .id(1L)
                 .name("John Doe")
@@ -37,7 +37,7 @@ public class ItemDtoJsonTests {
     }
 
     @Test
-    public void testDeserializeFromJson() throws JsonProcessingException {
+    public void deserializeFromJson() throws JsonProcessingException {
         String json = "{\"id\":1,\"name\":\"Item\",\"description\":\"This is an item\",\"available\":true,\"owner\"" +
                 ":{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"},\"requestId\":2}";
         User owner = User.builder()

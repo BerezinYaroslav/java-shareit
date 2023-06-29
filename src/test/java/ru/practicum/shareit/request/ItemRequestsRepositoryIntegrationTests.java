@@ -20,7 +20,7 @@ public class ItemRequestsRepositoryIntegrationTests {
     private ItemRequestRepository itemRequestRepository;
 
     @Test
-    public void testFindByRequestorId() {
+    public void findByRequestorId() {
         User user = User.builder().name("TestUser").email("test@mail.com").build();
         entityManager.persist(user);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
@@ -38,7 +38,7 @@ public class ItemRequestsRepositoryIntegrationTests {
         entityManager.flush();
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<ItemRequest> resultPage = itemRequestRepository.findByRequestor_id(user.getId(), pageable);
+        Page<ItemRequest> resultPage = itemRequestRepository.findByRequestorId(user.getId(), pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(2);
@@ -46,7 +46,7 @@ public class ItemRequestsRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByRequestorIdNot() {
+    public void findAllByRequestorIdNot() {
         User user = User.builder().name("TestUser").email("test@mail.com").build();
         entityManager.persist(user);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();

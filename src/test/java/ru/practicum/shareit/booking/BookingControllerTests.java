@@ -47,7 +47,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testAddBooking() throws Exception {
+    public void addBooking() throws Exception {
         objectMapper.registerModule(new JavaTimeModule());
         Long userId = 1L;
         BookingEntryDto bookingDto = BookingEntryDto.builder()
@@ -76,7 +76,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testAddBooking_InvalidUserId() throws Exception {
+    public void addBooking_InvalidUserId() throws Exception {
         objectMapper.registerModule(new JavaTimeModule());
         Long invalidUserId = -1L;
         BookingEntryDto bookingDto = BookingEntryDto.builder()
@@ -96,7 +96,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testAddBooking_InvalidDto() throws Exception {
+    public void addBooking_InvalidDto() throws Exception {
         Long userId = 1L;
         BookingEntryDto bookingDto = BookingEntryDto.builder().build();
 
@@ -108,7 +108,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testApproveBooking() throws Exception {
+    public void approveBooking() throws Exception {
         Long userId = 1L;
         Long bookingId = 1L;
         Boolean approved = true;
@@ -135,7 +135,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testApproveBooking_InvalidUserId() throws Exception {
+    public void approveBooking_InvalidUserId() throws Exception {
         Long invalidUserId = -1L;
         Long bookingId = 1L;
         Boolean approved = true;
@@ -150,7 +150,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetBookingById() throws Exception {
+    public void getBookingById() throws Exception {
         Long userId = 1L;
         Long bookingId = 1L;
         BookingDto bookingResponse = BookingDto.builder()
@@ -174,7 +174,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetBookingById_InvalidUserId() throws Exception {
+    public void getBookingById_InvalidUserId() throws Exception {
         Long invalidUserId = -1L;
         Long bookingId = 1L;
 
@@ -187,7 +187,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllBookingByState() throws Exception {
+    public void getAllBookingByState() throws Exception {
         Long userId = 1L;
         String state = "WAITING";
         int from = 0;
@@ -216,7 +216,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllBookingByState_InvalidPageFrom() throws Exception {
+    public void getAllBookingByState_InvalidPageFrom() throws Exception {
         Long invalidUserId = -1L;
         String state = "WAITING";
         int from = -1;
@@ -234,7 +234,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllBookingByState_InvalidPageSize() throws Exception {
+    public void getAllBookingByState_InvalidPageSize() throws Exception {
         Long invalidUserId = -1L;
         String state = "WAITING";
         int from = 0;
@@ -251,7 +251,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllBookingByState_InvalidUserId() throws Exception {
+    public void getAllBookingByState_InvalidUserId() throws Exception {
         Long invalidUserId = -1L;
         String state = "WAITING";
         int from = 0;
@@ -269,7 +269,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllItemsBookings() throws Exception {
+    public void getAllItemsBookings() throws Exception {
         Long userId = 1L;
         String state = "ALL";
         int from = 0;
@@ -305,7 +305,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllItemsBookings_InvalidUserId() throws Exception {
+    public void getAllItemsBookings_InvalidUserId() throws Exception {
         Long invalidUserId = -1L;
         String state = "ALL";
         int from = 0;
@@ -323,7 +323,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllItemsBookings_InvalidPageFrom() throws Exception {
+    public void getAllItemsBookings_InvalidPageFrom() throws Exception {
         Long invalidUserId = 1L;
         String state = "ALL";
         int from = -1;
@@ -341,7 +341,7 @@ public class BookingControllerTests {
     }
 
     @Test
-    public void testGetAllItemsBookings_InvalidPageSize() throws Exception {
+    public void getAllItemsBookings_InvalidPageSize() throws Exception {
         Long invalidUserId = 1L;
         String state = "ALL";
         int from = 0;

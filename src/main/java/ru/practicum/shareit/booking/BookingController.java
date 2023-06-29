@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
 import javax.xml.bind.ValidationException;
 import java.util.List;
 
@@ -47,8 +46,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> getAllItemsBookings(@RequestHeader("X-Sharer-User-Id") Long id,
                                                 @RequestParam(defaultValue = "ALL") String state,
-                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                                @RequestParam(defaultValue = "10") @PositiveOrZero int size) throws ValidationException {
+                                                @RequestParam(defaultValue = "0") int from,
+                                                @RequestParam(defaultValue = "10") int size) throws ValidationException {
         return bookingService.getAllOwnersBookingByState(id, state, from, size);
     }
 }

@@ -31,7 +31,7 @@ public class ItemRequestControllerTests {
     private ItemRequestService requestService;
 
     @Test
-    public void testAddRequest() throws Exception {
+    public void addRequest() throws Exception {
         Long userId = 1L;
         ItemRequestDto itemRequestDto = new ItemRequestDto();
         itemRequestDto.setDescription("Request Description");
@@ -53,7 +53,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testAddRequest_InvalidUser() throws Exception {
+    public void addRequest_InvalidUser() throws Exception {
         ItemRequestDto requestDto = new ItemRequestDto();
         requestDto.setDescription("Test description");
 
@@ -68,7 +68,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testAddRequest_InvalidDescription() throws Exception {
+    public void addRequest_InvalidDescription() throws Exception {
         ItemRequestDto requestDto = new ItemRequestDto();
         requestDto.setDescription("");
 
@@ -80,7 +80,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetOwnRequests() throws Exception {
+    public void getOwnRequests() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = 10;
@@ -110,7 +110,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetOwnRequests_InvalidUser() throws Exception {
+    public void getOwnRequests_InvalidUser() throws Exception {
         int from = 0;
         int size = 10;
 
@@ -125,7 +125,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetOwnRequests_InvalidPageFrom() throws Exception {
+    public void getOwnRequests_InvalidPageFrom() throws Exception {
         int from = -1;
         int size = 10;
 
@@ -140,7 +140,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetOwnRequests_InvalidPageSize() throws Exception {
+    public void getOwnRequests_InvalidPageSize() throws Exception {
         int from = 0;
         int size = -1;
 
@@ -155,7 +155,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetAllRequests() throws Exception {
+    public void getAllRequests() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = 10;
@@ -184,7 +184,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetAllRequests_InvalidPageFrom() throws Exception {
+    public void getAllRequests_InvalidPageFrom() throws Exception {
         Long userId = 1L;
         int from = -1;
         int size = 10;
@@ -200,7 +200,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetAllRequests_InvalidPageSize() throws Exception {
+    public void getAllRequests_InvalidPageSize() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = -1;
@@ -216,7 +216,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void testGetRequestById() throws Exception {
+    public void getRequestById() throws Exception {
         Long userId = 1L;
         Long requestId = 1L;
 

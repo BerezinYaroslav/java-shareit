@@ -25,7 +25,7 @@ public class BookingRepositoryIntegrationTests {
     private BookingRepository bookingRepository;
 
     @Test
-    public void testFindAllByBookerId() {
+    public void findAllByBookerId() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -50,7 +50,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByBookerIdAndStatus() {
+    public void findAllByBookerIdAndStatus() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -76,7 +76,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByBookerIdAndEndBefore() {
+    public void findAllByBookerIdAndEndBefore() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -114,7 +114,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByBookerIdAndStartAfter() {
+    public void findAllByBookerIdAndStartAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -152,7 +152,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByBookerIdAndStartBeforeAndEndAfter() {
+    public void findAllByBookerIdAndStartBeforeAndEndAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -190,7 +190,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByItemOwnerIdAndStatus() {
+    public void findAllByItemOwnerIdAndStatus() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -217,7 +217,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByItemOwnerIdAndEndBefore() {
+    public void findAllByItemOwnerIdAndEndBefore() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -253,7 +253,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByItemOwnerIdAndStartAfter() {
+    public void findAllByItemOwnerIdAndStartAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -289,7 +289,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindAllByItemOwnerIdAndStartBeforeAndEndAfter() {
+    public void findAllByItemOwnerIdAndStartBeforeAndEndAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();

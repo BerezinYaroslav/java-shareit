@@ -34,7 +34,7 @@ public class ItemControllerTests {
     private ItemService itemService;
 
     @Test
-    public void testGetItems() throws Exception {
+    public void getItems() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = 10;
@@ -52,7 +52,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testSearchItems() throws Exception {
+    public void searchItems() throws Exception {
         String text = "search";
         int from = 0;
         int size = 10;
@@ -70,12 +70,10 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testSearchItems_InvalidPageFrom() throws Exception {
+    public void searchItems_InvalidPageFrom() throws Exception {
         String text = "search";
         int from = -1;
         int size = 10;
-        // TODO: 27.06.2023
-        List<ItemDto> expectedResult = new ArrayList<>();
 
         when(itemService.searchItems(text, from, size))
                 .thenThrow(new ValidationException(""));
@@ -88,12 +86,10 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testSearchItems_InvalidPageSize() throws Exception {
+    public void searchItems_InvalidPageSize() throws Exception {
         String text = "search";
         int from = 0;
         int size = -1;
-        // TODO: 27.06.2023
-        List<ItemDto> expectedResult = new ArrayList<>();
         when(itemService.searchItems(text, from, size))
                 .thenThrow(new ValidationException(""));
 
@@ -105,7 +101,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testUpdateItem() throws Exception {
+    public void updateItem() throws Exception {
         Long userId = 1L;
         Long itemId = 1L;
         ItemDto itemDto = ItemDto.builder()
@@ -137,7 +133,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testUpdateItem_InvalidUser() throws Exception {
+    public void updateItem_InvalidUser() throws Exception {
         Long userId = 99L;
         Long itemId = 1L;
         ItemDto itemDto = ItemDto.builder()
@@ -156,7 +152,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testUpdateItem_InvalidItem() throws Exception {
+    public void updateItem_InvalidItem() throws Exception {
         Long userId = 1L;
         Long itemId = 99L;
         ItemDto itemDto = ItemDto.builder()
@@ -177,7 +173,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testAddItem() throws Exception {
+    public void addItem() throws Exception {
         Long userId = 1L;
         ItemDto itemDto = ItemDto.builder()
                 .id(1L)
@@ -208,7 +204,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testAddItem_InvalidUser() throws Exception {
+    public void addItem_InvalidUser() throws Exception {
         Long userId = 99L;
         ItemDto itemDto = ItemDto.builder()
                 .id(1L)
@@ -228,7 +224,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testAddItem_InvalidItem() throws Exception {
+    public void addItem_InvalidItem() throws Exception {
         Long userId = 99L;
         ItemDto itemDto = ItemDto.builder().id(1L).description("").name("").build();
 
@@ -240,7 +236,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testAddComment() throws Exception {
+    public void addComment() throws Exception {
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
                 .itemId(1L)
@@ -267,7 +263,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testAddComment_InvalidUser() throws Exception {
+    public void addComment_InvalidUser() throws Exception {
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
                 .itemId(1L)
@@ -284,7 +280,7 @@ public class ItemControllerTests {
     }
 
     @Test
-    public void testAddComment_InvalidComment() throws Exception {
+    public void addComment_InvalidComment() throws Exception {
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
                 .itemId(1L)
@@ -298,4 +294,3 @@ public class ItemControllerTests {
                 .andExpect(status().isBadRequest());
     }
 }
-

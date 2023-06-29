@@ -18,7 +18,7 @@ public class BookingEntryDtoJsonTests {
             .setDateFormat(new StdDateFormat().withColonInTimeZone(true));
 
     @Test
-    public void testSerializeToJson() throws Exception {
+    public void serializeToJson() throws Exception {
         objectMapper.registerModule(new JavaTimeModule());
         BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
                 .id(1L)
@@ -33,7 +33,7 @@ public class BookingEntryDtoJsonTests {
     }
 
     @Test
-    public void testDeserializeFromJson() throws Exception {
+    public void deserializeFromJson() throws Exception {
         objectMapper.registerModule(new JavaTimeModule());
         String json = "{\"id\":1,\"start\":\"2023-05-01T10:00:00\",\"end\":\"2023-05-01T12:00:00\",\"itemId\":2}";
         BookingEntryDto bookingEntryDto = objectMapper.readValue(json, BookingEntryDto.class);

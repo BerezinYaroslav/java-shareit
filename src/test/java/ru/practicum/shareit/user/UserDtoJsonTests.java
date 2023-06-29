@@ -12,7 +12,7 @@ public class UserDtoJsonTests {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void testSerializeToJson() throws JsonProcessingException {
+    public void serializeToJson() throws JsonProcessingException {
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("John Doe")
@@ -25,7 +25,7 @@ public class UserDtoJsonTests {
     }
 
     @Test
-    public void testDeserializeFromJson() throws JsonProcessingException {
+    public void deserializeFromJson() throws JsonProcessingException {
         String json = "{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"}";
         UserDto expectedUserDto = UserDto.builder()
                 .id(1L)

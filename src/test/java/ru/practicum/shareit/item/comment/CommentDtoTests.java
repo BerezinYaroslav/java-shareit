@@ -19,7 +19,7 @@ public class CommentDtoTests {
             .setDateFormat(new StdDateFormat().withColonInTimeZone(true));
 
     @Test
-    void testCommentDtoSerialization() throws JsonProcessingException {
+    void commentDtoSerialization() throws JsonProcessingException {
         objectMapper.registerModule(new JavaTimeModule());
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
@@ -35,7 +35,7 @@ public class CommentDtoTests {
     }
 
     @Test
-    void testCommentDtoDeserialization() throws JsonProcessingException {
+    void commentDtoDeserialization() throws JsonProcessingException {
         objectMapper.registerModule(new JavaTimeModule());
         String json = "{\"id\":1,\"text\":\"This is a comment\",\"authorName\":\"John Doe\",\"itemId\":2,\"created\":\"2023-05-29T12:34:56.789\"}";
         CommentDto commentDto = objectMapper.readValue(json, CommentDto.class);
