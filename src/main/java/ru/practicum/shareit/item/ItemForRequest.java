@@ -16,4 +16,11 @@ public class ItemForRequest {
     private String description;
     private Boolean available;
     private Long requestId;
+
+    public ItemForRequest(String name, String description, Boolean available, Long requestId) {
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.requestId = requestId;
+    }
 }
