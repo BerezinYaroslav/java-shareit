@@ -188,13 +188,6 @@ public class MockItemServiceImplTest {
     }
 
     @Test
-    void searchItem_returnListItemDto_length1() throws ValidationException {
-        when(service.searchItems(anyString(), anyInt(), anyInt())).thenReturn(List.of(itemDto1));
-
-        assertEquals(1, service.searchItems("iTem1", 0/10, 10).size());
-    }
-
-    @Test
     void addComment_returnCommentDto() {
         when(service.addComment(anyLong(), anyLong(), any(CommentDto.class)))
                 .thenReturn(commentDto1);
