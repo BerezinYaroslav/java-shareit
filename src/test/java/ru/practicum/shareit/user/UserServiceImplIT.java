@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.practicum.shareit.exceptions.DuplicateException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class UserServiceImplIT {
     private final UserRepository userRepository;
 
     @Test
-    void createNewUser_returnUserDto() throws DuplicateException {
+    void createNewUser_returnUserDto() {
         when(userRepository.save(any(User.class)))
                 .thenReturn(toUser(user1));
 
@@ -100,7 +99,7 @@ public class UserServiceImplIT {
     }
 
     @Test
-    void updateUser_correctResult() throws DuplicateException {
+    void updateUser_correctResult() {
         when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(toUser(user1)));
 

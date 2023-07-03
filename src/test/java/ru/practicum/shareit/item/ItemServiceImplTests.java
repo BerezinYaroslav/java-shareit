@@ -11,7 +11,6 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingDto;
 import ru.practicum.shareit.booking.BookingEntryDto;
 import ru.practicum.shareit.booking.BookingService;
-import ru.practicum.shareit.exceptions.DuplicateException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.request.ItemRequest;
@@ -65,7 +64,7 @@ class ItemServiceImplTests {
     private final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     @BeforeEach
-    public void beforeEach() throws DuplicateException, ValidationException {
+    public void beforeEach() throws ValidationException {
         user = User.builder().id(1L).name("test").email("test@test.ru").build();
         user = toUser(userService.addUser(toUserDto(user)));
 

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.practicum.shareit.exceptions.DuplicateException;
 import ru.practicum.shareit.exceptions.NotAvailableException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.NotSupportedStateException;
@@ -49,7 +48,7 @@ public class BookingServiceImplTests {
     private Booking booking2;
 
     @BeforeEach
-    public void beforeEach() throws DuplicateException {
+    public void beforeEach() {
         user = User.builder()
                 .id(1L)
                 .name("test")
