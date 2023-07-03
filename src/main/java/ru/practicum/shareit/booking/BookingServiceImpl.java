@@ -34,16 +34,19 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto addBooking(Long id, BookingEntryDto bookingDto) {
         validateDate(bookingDto);
-
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("item not found"));
+
         if (id.equals(item.getOwner().getId())) {
-            throw new NotFoundException("YOu cant book your own item");
+            throw new NotFoundException("You cant book your own item");
         }
         if (!item.getAvailable()) {
             throw new NotAvailableException("Not available");
         }
 
-        Booking booking = Booking.builder().start(bookingDto.getStart()).end(bookingDto.getEnd()).build();
+        Booking booking = Booking.builder()
+                .start(bookingDto.getStart())
+                .end(bookingDto.getEnd()).build();
+
         booking.setBooker(userRepository.findById(id).orElseThrow(() -> new NotFoundException("user not found")));
         booking.setItem(item);
         booking.setStatus(Status.WAITING);
@@ -66,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
 
         if (booking.getItem().getOwner().getId().longValue() != id.longValue()) {
-            throw new NotFoundException("Ur not the owner!");
+            throw new NotFoundException("User not the owner!");
         }
         if (booking.getStatus().equals(Status.APPROVED)) {
             throw new NotAvailableException("Already approved!");
@@ -89,10 +92,10 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("User not found");
         }
 
-
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("No such booking"));
+
         if (booking.getItem().getOwner().getId() != id.longValue() && booking.getBooker().getId() != id.longValue()) {
-            throw new NotFoundException("Ur not the owner or booker!");
+            throw new NotFoundException("User not the owner or booker!");
         }
 
         return toBookingDto(booking);
