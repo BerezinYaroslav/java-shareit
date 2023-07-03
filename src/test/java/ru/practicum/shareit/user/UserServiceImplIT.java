@@ -98,4 +98,35 @@ public class UserServiceImplIT {
 
         assertThrows(NotFoundException.class, () -> service.getUserById(99L), "Юзер 99 обнаружен");
     }
+
+    @Test
+    void updateUser_correctResult() throws DuplicateException {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(toUser(user1)));
+
+        when(userRepository.save(any(User.class)))
+                .thenReturn(toUser(user1));
+
+        UserDto user = service.updateUser(1L, user1);
+
+        assertThat(user.getId(), notNullValue());
+        assertThat(user.getName(), equalTo(user1.getName()));
+        assertThat(user.getEmail(), equalTo(user1.getEmail()));
+    }
+
+    @Test
+    void deleteUser_correctResult1() {
+        when(userRepository.existsById(anyLong()))
+                .thenReturn(false);
+
+        assertEquals(service.deleteUser(1L), true);
+    }
+
+    @Test
+    void deleteUser_correctResult2() {
+        when(userRepository.existsById(anyLong()))
+                .thenReturn(true);
+
+        assertEquals(service.deleteUser(1L), false);
+    }
 }
