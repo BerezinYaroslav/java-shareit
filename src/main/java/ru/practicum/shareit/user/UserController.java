@@ -2,7 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exceptions.DuplicateException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -29,13 +28,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody UserDto user) throws DuplicateException {
+    public UserDto addUser(@Valid @RequestBody UserDto user) {
         return service.addUser(user);
     }
 
     @PatchMapping("/{userId}")
     public UserDto updateUser(@PathVariable Long userId,
-                              @RequestBody UserDto user) throws DuplicateException {
+                              @RequestBody UserDto user) {
         return service.updateUser(userId, user);
     }
 }
