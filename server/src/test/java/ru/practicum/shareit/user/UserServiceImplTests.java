@@ -37,7 +37,7 @@ public class UserServiceImplTests {
 
     @Test
     void getUsers() {
-        List<User> users = userService.getUsers();
+        List<UserDto> users = userService.getUsers();
 
         assertEquals(1, users.size());
         assertEquals("test", users.get(0).getName());

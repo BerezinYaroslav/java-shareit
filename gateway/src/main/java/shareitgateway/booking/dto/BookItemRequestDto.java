@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookItemRequestDto {
-    @PositiveOrZero
-    private long itemId;
+	@PositiveOrZero
+	private long itemId;
 
-    @NotNull
-    @FutureOrPresent
-    private LocalDateTime start;
+	@NotNull
+	@FutureOrPresent
+	private LocalDateTime start;
 
-    @NotNull
-    @Future
-    private LocalDateTime end;
+	@NotNull
+	@Future
+	private LocalDateTime end;
 }

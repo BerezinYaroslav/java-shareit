@@ -14,7 +14,9 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class ItemRequestDto {
     private Long id;
+
     @NotBlank(message = "Описание не может быть пустым!")
     private String description;
+
     private Timestamp created;
 }

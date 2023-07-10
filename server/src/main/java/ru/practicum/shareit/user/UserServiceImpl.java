@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.ItemRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.user.UserMapper.toUser;
 import static ru.practicum.shareit.user.UserMapper.toUserDto;
@@ -20,8 +21,8 @@ public class UserServiceImpl implements UserService {
     private final ItemRepository itemRepository;
 
     @Override
-    public List<User> getUsers() {
-        return List.copyOf(userRepository.findAll());
+    public List<UserDto> getUsers() {
+        return userRepository.findAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
     }
 
     @Override

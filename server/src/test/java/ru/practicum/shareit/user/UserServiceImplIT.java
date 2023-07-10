@@ -53,7 +53,7 @@ public class UserServiceImplIT {
         when(userRepository.findAll())
                 .thenReturn(users);
 
-        List<User> usersDto = service.getUsers();
+        List<UserDto> usersDto = service.getUsers();
 
         assertNotNull(usersDto, "Юзеров нет");
         assertEquals(4, usersDto.size(), "Количесвто юзеров не совпадает");

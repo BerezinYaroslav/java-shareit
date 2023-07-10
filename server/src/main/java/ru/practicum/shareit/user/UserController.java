@@ -12,7 +12,7 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserDto> getUsers() {
         return service.getUsers();
     }
 

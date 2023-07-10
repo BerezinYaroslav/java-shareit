@@ -39,4 +39,3 @@ CREATE TABLE IF NOT EXISTS comments
     item_id    BIGINT REFERENCES items (item_id),
     author_id  BIGINT REFERENCES users (user_id)
 );
-
