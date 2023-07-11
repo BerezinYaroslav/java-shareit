@@ -15,6 +15,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Override
     Booking getOne(Long id);
 
+    /**
+     * для работы с параметром state
+     **/
     @Query("select bok " +
             "from Booking as bok " +
             "where bok.booker.id = ?1 " +
@@ -56,6 +59,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and (bok.status like ?2) " +
             "order by bok.start desc")
     List<Booking> findAllByBookerIdAndBookerStatusRejectedOrderByDesc(Long id, BookingStatus status, Pageable pageable); //"REJECTED" state
+
+    /**
+     * для работы с параметром owner
+     **/
 
     @Query("select bok " +
             "from Booking as bok " +
