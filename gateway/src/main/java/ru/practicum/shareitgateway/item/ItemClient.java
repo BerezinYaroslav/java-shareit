@@ -12,10 +12,11 @@ import java.util.Map;
 
 @Service
 public class ItemClient extends BaseClient {
-    public ItemClient(@Value("${shareit-server.url}") String itemUrl,
-                      RestTemplateBuilder builder) {
-        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(itemUrl + "/items"))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
+    public ItemClient(@Value("${shareit-server.url}") String itemUrl, RestTemplateBuilder builder) {
+        super(builder
+                .uriTemplateHandler(new DefaultUriBuilderFactory(itemUrl + "/items"))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build());
     }
 
     public ResponseEntity<Object> getItems(Long userId, int from, int size) {

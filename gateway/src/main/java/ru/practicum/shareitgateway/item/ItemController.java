@@ -2,6 +2,7 @@ package ru.practicum.shareitgateway.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,7 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 @Validated
 public class ItemController {
+    @Autowired
     private final ItemClient itemClient;
 
     @GetMapping
@@ -29,8 +31,8 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> getItemsText(@RequestParam String text,
-                                               @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                               @Positive @RequestParam(defaultValue = "10") Integer size) {
+                                               @PositiveOrZero @RequestParam(defaultValue = "0")
+    Integer from, @Positive @RequestParam(defaultValue = "10") Integer size) {
         return itemClient.getItemsText(text, from, size);
     }
 
@@ -48,16 +50,14 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> createComment(@RequestBody CommentDto commentDto,
-                                                @RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> createComment(@RequestBody CommentDto commentDto, @RequestHeader("X-Sharer-User-Id") Long userId,
                                                 @PathVariable Long itemId) {
         log.info("POST item comment with userId: {}", userId);
         return itemClient.createComment(commentDto, userId, itemId);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> updateUserByIdPatch(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                      @PathVariable Long itemId,
+    public ResponseEntity<Object> updateUserByIdPatch(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId,
                                                       @Valid @RequestBody ItemDto item) {
         return itemClient.updateItemById(userId, itemId, item);
     }

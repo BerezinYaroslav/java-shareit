@@ -13,8 +13,10 @@ import ru.practicum.shareitgateway.client.BaseClient;
 public class UserClient extends BaseClient {
     @Autowired
     public UserClient(@Value("${shareit-server.url}") String userUrl, RestTemplateBuilder builder) {
-        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(userUrl + "/users"))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
+        super(builder
+                .uriTemplateHandler(new DefaultUriBuilderFactory(userUrl + "/users"))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build());
     }
 
     public ResponseEntity<Object> getUsers() {

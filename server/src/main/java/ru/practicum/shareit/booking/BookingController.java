@@ -13,9 +13,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @Slf4j
 @RequestMapping(path = "/bookings")
@@ -43,13 +40,15 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public BookingDto getBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId) {
+    public BookingDto getBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                 @PathVariable Long bookingId) {
         log.info("GET booking with userId and bookingId: {}, {}", userId, bookingId);
         return bookingService.getBooking(userId, bookingId);
     }
 
     @PostMapping
-    public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody BookingEntity bookingEntity)
+    public BookingDto createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                    @RequestBody BookingEntity bookingEntity)
             throws BadRequestException {
         log.info("POST booking with userId: {}", userId);
         return bookingService.createBooking(userId, bookingEntity);
@@ -57,7 +56,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDto bookingStatus(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                    @PathVariable Long bookingId, @RequestParam Boolean approved) throws BadRequestException {
+                                    @PathVariable Long bookingId,
+                                    @RequestParam Boolean approved) throws BadRequestException {
         log.info("PATCH booking with userId and bookingId: {}, {}", userId, bookingId);
         return bookingService.bookingStatus(userId, bookingId, approved);
     }
