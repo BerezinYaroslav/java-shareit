@@ -10,12 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
-/** для исправления косяка с InvalidDefinitionException: No serializer found for class
- * org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer**/
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @AllArgsConstructor
@@ -24,8 +19,10 @@ import javax.persistence.Table;
 public class User {
     @Id
     private Long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "email")
     private String email;
 }

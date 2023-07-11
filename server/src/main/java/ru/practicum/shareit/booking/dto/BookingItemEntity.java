@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BookingItemEntity {
     private Long id;
-
     private Long bookerId;
 }

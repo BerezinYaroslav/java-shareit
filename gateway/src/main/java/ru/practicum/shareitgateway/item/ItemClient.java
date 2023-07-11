@@ -12,16 +12,13 @@ import java.util.Map;
 
 @Service
 public class ItemClient extends BaseClient {
-    public ItemClient(@Value("${shareit-server.url}") String itemUrl, RestTemplateBuilder builder) {
-        super(builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(itemUrl + "/items"))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                .build());
+    public ItemClient(@Value("${shareit-server.url}") String itemUrl,
+                      RestTemplateBuilder builder) {
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(itemUrl + "/items"))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }
 
-    public ResponseEntity<Object> getItems(Long userId,
-                                           int from,
-                                           int size) {
+    public ResponseEntity<Object> getItems(Long userId, int from, int size) {
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size
@@ -29,8 +26,7 @@ public class ItemClient extends BaseClient {
         return get("?from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> getItemsText(String text, Integer from,
-                                               Integer size) {
+    public ResponseEntity<Object> getItemsText(String text, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "text", text,
                 "from", from,
@@ -47,13 +43,11 @@ public class ItemClient extends BaseClient {
         return post("", userId, itemDto);
     }
 
-    public ResponseEntity<Object> createComment(CommentDto commentDto, Long userId,
-                                                Long itemId) {
+    public ResponseEntity<Object> createComment(CommentDto commentDto, Long userId, Long itemId) {
         return post("/" + itemId + "/comment", userId, commentDto);
     }
 
-    public ResponseEntity<Object> updateItemById(Long userId, Long itemId,
-                                                 ItemDto item) {
+    public ResponseEntity<Object> updateItemById(Long userId, Long itemId, ItemDto item) {
         return patch("/" + itemId, userId, item);
     }
 

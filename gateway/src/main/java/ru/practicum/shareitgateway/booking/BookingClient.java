@@ -18,18 +18,11 @@ public class BookingClient extends BaseClient {
 
     @Autowired
     public BookingClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(
-                builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
-                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                        .build()
-        );
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }
 
-    public ResponseEntity<Object> getBookingsOwner(Long id,
-                                                   String state,
-                                                   Integer from,
-                                                   Integer size) {
+    public ResponseEntity<Object> getBookingsOwner(Long id, String state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state,
                 "from", from,
@@ -38,10 +31,7 @@ public class BookingClient extends BaseClient {
         return get("/owner?state={state}&from={from}&size={size}", id, parameters);
     }
 
-    public ResponseEntity<Object> getBookingState(Long id,
-                                                  String state,
-                                                  int from,
-                                                  int size) {
+    public ResponseEntity<Object> getBookingState(Long id, String state, int from, int size) {
         Map<String, Object> parameters = Map.of(
                 "state", state,
                 "from", from,
@@ -58,8 +48,7 @@ public class BookingClient extends BaseClient {
         return post("", userId, bookingEntity);
     }
 
-    public ResponseEntity<Object> bookingStatus(Long userId,
-                                                Long bookingId, Boolean approved) {
+    public ResponseEntity<Object> bookingStatus(Long userId, Long bookingId, Boolean approved) {
         Map<String, Object> parameters = Map.of("approved", approved);
         return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
     }

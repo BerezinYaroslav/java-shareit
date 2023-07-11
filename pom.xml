@@ -8,6 +8,7 @@
         <version>2.7.2</version>
         <relativePath/>
     </parent>
+
     <packaging>pom</packaging>
     <modules>
         <module>gateway</module>

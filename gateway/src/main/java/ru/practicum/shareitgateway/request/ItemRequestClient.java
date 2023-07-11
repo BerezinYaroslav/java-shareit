@@ -13,22 +13,18 @@ import java.util.Map;
 
 @Service
 public class ItemRequestClient extends BaseClient {
-
     @Autowired
-    public ItemRequestClient(@Value("${shareit-server.url}") String itemRequestUrl, RestTemplateBuilder builder) {
-        super(builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(itemRequestUrl + "/requests"))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                .build());
+    public ItemRequestClient(@Value("${shareit-server.url}") String itemRequestUrl,
+                             RestTemplateBuilder builder) {
+        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(itemRequestUrl + "/requests"))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }
 
     public ResponseEntity<Object> getRequests(Long userId) {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> getRequestsFrom(Long userId,
-                                                  Integer from,
-                                                  Integer size) {
+    public ResponseEntity<Object> getRequestsFrom(Long userId, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size

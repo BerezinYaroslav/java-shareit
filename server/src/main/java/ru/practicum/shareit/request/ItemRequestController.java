@@ -12,9 +12,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @RestController
 @RequestMapping(path = "/requests")
 @Slf4j
@@ -38,13 +35,15 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto getRequestsById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long requestId) throws BadRequestException {
+    public ItemRequestDto getRequestsById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                          @PathVariable Long requestId) throws BadRequestException {
         log.info("GET request with userId and requestId: {}, {}", userId, requestId);
         return itemRequestService.getRequestsById(userId, requestId);
     }
 
     @PostMapping
-    public ItemRequestDto createRequests(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody ItemRequestDto itemRequestDto) throws BadRequestException {
+    public ItemRequestDto createRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                         @RequestBody ItemRequestDto itemRequestDto) throws BadRequestException {
         log.info("POST request to add an item request with userId: {}", userId);
         return itemRequestService.createRequests(userId, itemRequestDto);
     }

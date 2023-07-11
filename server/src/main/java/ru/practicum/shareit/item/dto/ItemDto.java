@@ -10,21 +10,25 @@ import ru.practicum.shareit.item.comment.CommentDto;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ItemDto {
     private Long id;
+
     private String name;
+
     private String description;
+
     private Boolean available;
+
     private BookingItemEntity lastBooking;
+
     private BookingItemEntity nextBooking;
+
     private List<CommentDto> comments;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long requestId;
 }

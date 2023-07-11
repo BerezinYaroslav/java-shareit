@@ -28,9 +28,11 @@ public class ItemRequestMapper {
 
     public static List<ItemRequestDto> listToItemRequestDto(List<ItemRequest> itemRequest) throws BadRequestException {
         List<ItemRequestDto> dtos = new ArrayList<>();
+
         for (ItemRequest request : itemRequest) {
             dtos.add(makeItemRequestDto(request));
         }
+
         return dtos;
     }
 }

@@ -43,11 +43,15 @@ public class BookingServiceImpl implements BookingService {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
+
         User user = userRepository.getById(userId);
+
         if (bookingEntity.getItemId() > itemService.returnId()) {
             throw new NotFoundException("Данной вещи не существует (Booking.create)");
         }
+
         Item item = itemRepository.getById(bookingEntity.getItemId());
+
         if (userId.equals(item.getOwner().getId())) {
             throw new NotFoundException("Пользователь является собственником вещи (Booking.create)");
         }
@@ -58,8 +62,10 @@ public class BookingServiceImpl implements BookingService {
                 bookingEntity.getEnd() == null || bookingEntity.getEnd().isBefore(LocalDateTime.now().minusMinutes(5)) ||
                 bookingEntity.getStart().isBefore(LocalDateTime.now().minusMinutes(5)) ||
                 bookingEntity.getEnd().isBefore(bookingEntity.getStart()) ||
-                bookingEntity.getEnd().equals(bookingEntity.getStart()))
+                bookingEntity.getEnd().equals(bookingEntity.getStart())) {
             throw new BadRequestException("Время окончания бронирования указано не верно (Booking.create)");
+        }
+
         Booking booking = new Booking();
         booking.setBooker(user);
         booking.setId(makeId());
@@ -76,15 +82,19 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto bookingStatus(Long userId, Long bookingId, Boolean approve) throws BadRequestException {
         Booking booking = bookingRepository.getById(bookingId);
-        if (!booking.getItem().getOwner().getId().equals(userId))
+
+        if (!booking.getItem().getOwner().getId().equals(userId)) {
             throw new NotFoundException("Подтверждать статус имеет права только собственник вещи(Booking.status)");
+        }
         if (booking.getStatus().equals(BookingStatus.APPROVED)) {
             throw new BadRequestException("Статус уже подтвержден(Booking.status)");
         }
-        if (approve)
+        if (approve) {
             booking.setStatus(BookingStatus.APPROVED);
-        else
+        } else {
             booking.setStatus(BookingStatus.REJECTED);
+        }
+
         bookingRepository.save(booking);
         return makeBookingDto(booking);
     }
@@ -93,11 +103,13 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDto getBooking(Long userId, Long bookerId) {
         Booking booking = bookingRepository.getById(bookerId);
+
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
-        if (bookerId > returnId())
+        if (bookerId > returnId()) {
             throw new NotFoundException("Данная бронь отсутствует(Booking.get)");
+        }
         if (!booking.getItem().getOwner().getId().equals(userId) && !booking.getBooker().getId().equals(userId)) {
             throw new NotFoundException("Вы не являетесь собственником");
         }
@@ -106,13 +118,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public List<BookingDto> getBookingsOwner(Long userId, String state, Integer from, Integer size)
-            throws BadRequestException {
+    public List<BookingDto> getBookingsOwner(Long userId, String state, Integer from, Integer size) throws BadRequestException {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
+
         int page = from >= 0 ? Math.round((float) from / size) : -1;
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
+
         switch (state) {
             case "ALL":
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdOrderByDesc(userId, pageable));
@@ -139,19 +152,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public List<BookingDto> getBookingState(Long userId, String state, Integer from, Integer size)
-            throws BadRequestException {
+    public List<BookingDto> getBookingState(Long userId, String state, Integer from, Integer size) throws BadRequestException {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
+
         int page = from >= 0 ? Math.round((float) from / size) : -1;
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
+
         switch (state) {
             case "ALL":
                 return listToBookingDto(bookingRepository.findAllByBookerIdOrderByDesc(userId, pageable));
             case "CURRENT":
-                return listToBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByDesc(userId, LocalDateTime.now(),
-                        LocalDateTime.now(), pageable));
+                return listToBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByDesc(userId,
+                        LocalDateTime.now(), LocalDateTime.now(), pageable));
             case "PAST":
                 return listToBookingDto(bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByDesc(userId,
                         LocalDateTime.now(), pageable));
@@ -184,6 +198,4 @@ public class BookingServiceImpl implements BookingService {
         id += 1;
         return id;
     }
-
-
 }

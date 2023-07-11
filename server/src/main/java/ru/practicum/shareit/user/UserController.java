@@ -12,9 +12,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @Slf4j
 @RequestMapping("/users")
@@ -42,7 +39,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public User updateUserByIdPatch(@PathVariable Long userId, @RequestBody UserDto user)
+    public User updateUserByIdPatch(@PathVariable Long userId,
+                                    @RequestBody UserDto user)
             throws CloneNotSupportedException, BadRequestException {
         log.info("User обновлен(UserController): {}, {}", userId, user);
         return userService.updateUserById(userId, user);

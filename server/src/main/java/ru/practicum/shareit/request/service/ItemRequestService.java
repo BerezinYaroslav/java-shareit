@@ -6,7 +6,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import java.util.List;
 
 public interface ItemRequestService {
-
     List<ItemRequestDto> getRequests(Long userId) throws BadRequestException;
 
     List<ItemRequestDto> getRequestsFrom(Long userId, Integer from, Integer size) throws BadRequestException;

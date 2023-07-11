@@ -28,14 +28,17 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+
     private Long id = 0L;
 
     @Override
     public List<ItemRequestDto> getRequests(Long userId) throws BadRequestException {
-        if (userId > userService.returnId())
+        if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.getRequests)");
-        List<ItemRequestDto> itemRequestDto =
-                listToItemRequestDto(itemRequestRepository.getAllItemRequestForUser(userId));
+        }
+
+        List<ItemRequestDto> itemRequestDto = listToItemRequestDto(itemRequestRepository.getAllItemRequestForUser(userId));
+
         for (ItemRequestDto dto : itemRequestDto) {
             List<Item> items = itemRepository.findAllItemWhereRequester(dto.getId());
             dto.setItems(listToItemDto(items));
@@ -45,13 +48,18 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getRequestsFrom(Long userId, Integer from, Integer size) throws BadRequestException {
-        if (userId > userService.returnId())
+        if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.getRequestsById)");
-        if (from < 0 || size <= 0)
+        }
+        if (from < 0 || size <= 0) {
             throw new BadRequestException("Значения для страницы переданы не верно(ItemRequestServiceImpl.getRequestsById)");
+        }
+
         int page = Math.round((float) from / size);
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
-        List<ItemRequestDto> itemRequestDto = listToItemRequestDto(itemRequestRepository.getAllItemRequestForUserNull(userId, pageable));
+        List<ItemRequestDto> itemRequestDto = listToItemRequestDto(itemRequestRepository.
+                getAllItemRequestForUserNull(userId, pageable));
+
         for (ItemRequestDto dto : itemRequestDto) {
             List<Item> items = itemRepository.findAllItemWhereRequester(dto.getId());
             dto.setItems(listToItemDto(items));
@@ -61,10 +69,13 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto getRequestsById(Long userId, Long requestId) throws BadRequestException {
-        if (userId > userService.returnId())
+        if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.getRequestsById)");
-        if (requestId > id)
+        }
+        if (requestId > id) {
             throw new NotFoundException("Указанного запроса не существует(ItemRequestServiceImpl.getRequestsById)");
+        }
+
         ItemRequest itemRequest = itemRequestRepository.findById(requestId).orElseThrow(null);
         ItemRequestDto itemRequestDto = makeItemRequestDto(itemRequest);
         itemRequestDto.setItems(listToItemDto(itemRepository.findAllItemWhereRequester(requestId)));
@@ -73,10 +84,13 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto createRequests(Long userId, ItemRequestDto itemRequestDto) throws BadRequestException {
-        if (userId > userService.returnId())
+        if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.create)");
-        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription() == "")
+        }
+        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().equals("")) {
             throw new BadRequestException("Описание пустое (ItemRequestServiceImpl.create)");
+        }
+
         itemRequestDto.setCreated(LocalDateTime.now());
         ItemRequest itemRequest = makeItemRequest(itemRequestDto);
         itemRequest.setId(makeId());

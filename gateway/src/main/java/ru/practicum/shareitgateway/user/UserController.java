@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @Slf4j
 @RequestMapping("/users")
@@ -37,7 +34,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUserByIdPatch(@PathVariable Long userId, @Valid @RequestBody UserDto user) {
+    public ResponseEntity<Object> updateUserByIdPatch(@PathVariable Long userId,
+                                                      @Valid @RequestBody UserDto user) {
         return userClient.updateUserById(userId, user);
     }
 

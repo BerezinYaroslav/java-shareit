@@ -8,9 +8,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @Data
 @Entity
 @AllArgsConstructor
@@ -19,11 +16,14 @@ import java.time.LocalDateTime;
 public class ItemRequest {
     @Id
     private Long id;
+
     @Column(name = "description")
     private String description;
+
     @JoinColumn(name = "requester")
     @ManyToOne(fetch = FetchType.LAZY)
     private User requester;
+
     @Column(name = "created")
     private LocalDateTime created;
 }

@@ -43,6 +43,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final ItemRequestRepository itemRequestRepository;
+
     private Long id = 0L;
     private Long commentId = 0L;
 
@@ -53,18 +54,25 @@ public class ItemServiceImpl implements ItemService {
         ItemDto itemDto;
         Booking next;
         Booking last;
+
         int page = Math.round((float) from / size);
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
+
         for (Item it : itemRepository.findAllItemWhereOwner(userId, pageable)) {
             itemDto = makeItemDto(it);
             next = bookingRepository.getNextBookingForItem(it.getId(), LocalDateTime.now()).orElse(null);
             last = bookingRepository.getLastBookingForItem(it.getId(), LocalDateTime.now()).orElse(null);
-            if (next != null)
+            if (next != null) {
                 itemDto.setNextBooking(makeBookingItemEntity(next));
-            else itemDto.setNextBooking(null);
-            if (last != null)
+            } else {
+                itemDto.setNextBooking(null);
+            }
+            if (last != null) {
                 itemDto.setLastBooking(makeBookingItemEntity(last));
-            else itemDto.setLastBooking(null);
+            } else {
+                itemDto.setLastBooking(null);
+            }
+
             itemDto.setComments(makeCommentDtoList(commentRepository.getCommentsForItem(itemDto.getId())));
             itemList.add(itemDto);
         }
@@ -75,25 +83,35 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto getItemById(Long userId, Long itemId) {
         Item item;
-        if (itemId <= returnId())
+
+        if (itemId <= returnId()) {
             item = itemRepository.getById(itemId);
-        else
+        } else {
             throw new NotFoundException("Заданного Item id не существует");
+        }
+
         Booking next = null;
         Booking last = null;
+
         if (item.getOwner().getId().equals(userId)) {
             next = bookingRepository.getNextBookingForItem(itemId, LocalDateTime.now()).orElse(null);
             last = bookingRepository.getLastBookingForItem(itemId, LocalDateTime.now()).orElse(null);
         }
+
         BookingItemEntity nextDto = null;
         BookingItemEntity lastDto = null;
-        if (next != null)
+
+        if (next != null) {
             nextDto = makeBookingItemEntity(next);
-        if (last != null)
+        }
+        if (last != null) {
             lastDto = makeBookingItemEntity(last);
+        }
+
         ItemDto itemDto = makeItemDto(item);
         itemDto.setNextBooking(nextDto);
         itemDto.setLastBooking(lastDto);
+
         List<CommentDto> comment = makeCommentDtoList(commentRepository.getCommentsForItem(itemId));
         itemDto.setComments(comment);
         return itemDto;
@@ -104,11 +122,13 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> itemList = new ArrayList<>();
         String checkingTheComparisonName;
         String checkingTheComparisonDescription;
+
         int page = Math.round((float) from / size);
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
-        if (text == null || text.equals(""))
+
+        if (text == null || text.equals("")) {
             return new ArrayList<>();
-        else {
+        } else {
             for (Item it : itemRepository.findAllItem(pageable)) {
                 Item itemM = it;
                 if (itemM.getAvailable()) {
@@ -129,13 +149,18 @@ public class ItemServiceImpl implements ItemService {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Item.createComment)");
         }
-        if (itemId > returnId())
+        if (itemId > returnId()) {
             throw new BadRequestException("Данная вещь отсутствует (Item.createComment)");
-        if (commentDto.getText() == null || commentDto.getText() == "")
+        }
+        if (commentDto.getText() == null || commentDto.getText().equals("")) {
             throw new BadRequestException("Комментарий пустой (Item.createComment)");
+        }
+
         BookingStatus bookingStatus = bookingRepository.checkStatusOfBooking(userId, itemId, LocalDateTime.now());
-        if (bookingStatus == null)
+        if (bookingStatus == null) {
             throw new BadRequestException("Бронирование отсутствует (Item.createComment)");
+        }
+
         commentDto.setId(makeCommentId());
         Comment comment = new Comment();
         comment.setId(commentDto.getId());
@@ -153,21 +178,29 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto createItem(Long userId, ItemDto itemDto) throws BadRequestException {
         User owner = userRepository.getById(userId);
-        if (itemDto.getAvailable() == null)
+
+        if (itemDto.getAvailable() == null) {
             throw new BadRequestException("Поле Available отсутствует");
-        if (itemDto.getName() == null || itemDto.getName() == "")
+        }
+        if (itemDto.getName() == null || itemDto.getName().equals("")) {
             throw new BadRequestException("Поле Name отсутствует");
-        if (itemDto.getDescription() == null)
+        }
+        if (itemDto.getDescription() == null) {
             throw new BadRequestException("Поле Description отсутствует");
-        if (userService.getUserById(userId) == null)
+        }
+        if (userService.getUserById(userId) == null) {
             throw new NotFoundException("Поле User отсутствует");
+        }
+
         itemDto.setId(makeId());
         Item item = makeItem(itemDto);
+
         if (itemDto.getRequestId() != null) {
             ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(() ->
                     new NotFoundException("Добавленный запрос отсутствует (ItemService.create)"));
             item.setRequestId(itemRequest);
         }
+
         item.setId(itemDto.getId());
         item.setOwner(owner);
         itemRepository.save(item);
@@ -179,17 +212,23 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItemById(Long userId, Long id, ItemDto itemDto) {
         Item adItem = itemRepository.getById(id);
         User verificationUser = adItem.getOwner();
+
         if (!verificationUser.getId().equals(userId)) {
             throw new NotFoundException("Поле Owner не совпадает");
         }
-        if (itemDto.getId() != null)
+        if (itemDto.getId() != null) {
             adItem.setId(id);
-        if (itemDto.getName() != null)
+        }
+        if (itemDto.getName() != null) {
             adItem.setName(itemDto.getName());
-        if (itemDto.getDescription() != null)
+        }
+        if (itemDto.getDescription() != null) {
             adItem.setDescription(itemDto.getDescription());
-        if (itemDto.getAvailable() != null)
+        }
+        if (itemDto.getAvailable() != null) {
             adItem.setAvailable(itemDto.getAvailable());
+        }
+
         itemRepository.save(adItem);
         itemDto = makeItemDto(adItem);
         return itemDto;

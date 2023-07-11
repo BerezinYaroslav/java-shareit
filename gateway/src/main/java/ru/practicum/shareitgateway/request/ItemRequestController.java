@@ -9,9 +9,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @RestController
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
@@ -32,12 +29,14 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<Object> getRequestsById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long requestId) {
+    public ResponseEntity<Object> getRequestsById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                  @PathVariable Long requestId) {
         return itemRequestClient.getRequestsById(userId, requestId);
     }
 
     @PostMapping
-    public ResponseEntity<Object> createRequests(@RequestHeader("X-Sharer-User-Id") Long userId, @Valid @RequestBody ItemRequestDto itemRequestDto) {
+    public ResponseEntity<Object> createRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                 @Valid @RequestBody ItemRequestDto itemRequestDto) {
         return itemRequestClient.createRequests(userId, itemRequestDto);
     }
 }
