@@ -40,4 +40,5 @@ public class RequestClient extends BaseClient {
     public ResponseEntity<Object> getRequestById(Long id, Long requestId) {
         return get("/" + requestId, id);
     }
+
 }

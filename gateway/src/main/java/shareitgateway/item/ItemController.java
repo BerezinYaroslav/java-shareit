@@ -15,6 +15,8 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 @Validated
 public class ItemController {
+
+
     private final ItemClient client;
 
     @GetMapping
@@ -48,4 +50,5 @@ public class ItemController {
     public ResponseEntity<Object> addComment(@RequestHeader("X-Sharer-User-Id") Long id, @PathVariable Long itemId, @Valid @RequestBody CommentDto commentDto) {
         return client.addComment(id, itemId, commentDto);
     }
+
 }

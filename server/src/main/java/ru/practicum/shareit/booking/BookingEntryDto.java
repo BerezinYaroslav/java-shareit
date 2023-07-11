@@ -13,7 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BookingEntryDto {
     private Long id;
+
     private LocalDateTime start;
+
+
     private LocalDateTime end;
+
     private Long itemId;
+
+
 }

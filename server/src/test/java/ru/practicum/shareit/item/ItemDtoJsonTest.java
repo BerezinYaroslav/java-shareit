@@ -11,16 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JsonTest
 @ActiveProfiles("test")
-public class ItemDtoJsonTests {
+public class ItemDtoJsonTest {
+
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void serializeToJson() throws JsonProcessingException {
+    public void testSerializeToJson() throws JsonProcessingException {
         User owner = User.builder()
                 .id(1L)
                 .name("John Doe")
                 .email("johndoe@example.com")
                 .build();
+
         ItemDto itemDto = ItemDto.builder()
                 .id(1L)
                 .name("TestItem")
@@ -29,6 +32,7 @@ public class ItemDtoJsonTests {
                 .owner(owner)
                 .requestId(2L)
                 .build();
+
         String expectedJson = "{\"id\":1,\"name\":\"TestItem\",\"description\":\"TestItem\"," +
                 "\"available\":true,\"owner\":{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"},\"requestId\":2,\"lastBooking\":null,\"nextBooking\":null,\"comments\":null}";
         String actualJson = objectMapper.writeValueAsString(itemDto);
@@ -37,14 +41,15 @@ public class ItemDtoJsonTests {
     }
 
     @Test
-    public void deserializeFromJson() throws JsonProcessingException {
-        String json = "{\"id\":1,\"name\":\"Item\",\"description\":\"This is an item\",\"available\":true,\"owner\"" +
-                ":{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"},\"requestId\":2}";
+    public void testDeserializeFromJson() throws JsonProcessingException {
+        String json = "{\"id\":1,\"name\":\"Item\",\"description\":\"This is an item\",\"available\":true,\"owner\":{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"},\"requestId\":2}";
+
         User owner = User.builder()
                 .id(1L)
                 .name("John Doe")
                 .email("johndoe@example.com")
                 .build();
+
         ItemDto expectedItemDto = ItemDto.builder()
                 .id(1L)
                 .name("Item")
@@ -53,6 +58,7 @@ public class ItemDtoJsonTests {
                 .owner(owner)
                 .requestId(2L)
                 .build();
+
         ItemDto actualItemDto = objectMapper.readValue(json, ItemDto.class);
 
         assertEquals(expectedItemDto, actualItemDto);

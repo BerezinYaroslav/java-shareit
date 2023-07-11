@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.exceptions.DuplicateException;
 import ru.practicum.shareit.exceptions.NotAvailableException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.NotSupportedStateException;
@@ -30,135 +31,94 @@ import static ru.practicum.shareit.user.UserMapper.toUserDto;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class BookingServiceImplTests {
+class BookingServiceImplTest {
+
     private final BookingService bookingService;
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
+    User user = new User();
+    User user1 = new User();
 
-    private User user;
-    private User user1;
+    Item item = new Item();
 
-    private Item item;
-    private Item item1;
-    private Item item2;
+    Item item1 = new Item();
 
-    private Booking booking;
-    private Booking booking1;
-    private Booking booking2;
+    Item item2 = new Item();
+
+    Booking booking = new Booking();
+
+    Booking booking1 = new Booking();
+
+    Booking booking2 = new Booking();
 
     @BeforeEach
-    public void beforeEach() {
-        user = User.builder()
-                .id(1L)
-                .name("test")
-                .email("test@test.ru").build();
+    public void beforeEach() throws DuplicateException {
+        user = User.builder().id(1L).name("test").email("test@test.ru").build();
         user = toUser(userService.addUser(toUserDto(user)));
-        item = Item.builder()
-                .id(1L)
-                .owner(user)
-                .description("Test")
-                .name("Test")
-                .available(true).build();
+        item = Item.builder().id(1L).owner(user).description("Test").name("Test").available(true).build();
         item = toItem(itemService.addItem(1L, toItemDto(item)));
-        user1 = User.builder()
-                .id(2L)
-                .name("test1")
-                .email("test1@test.ru").build();
+        user1 = User.builder().id(2L).name("test1").email("test1@test.ru").build();
         user1 = toUser(userService.addUser(toUserDto(user1)));
-        item1 = Item.builder()
-                .id(2L)
-                .owner(user1)
-                .description("Test1")
-                .name("Test1")
-                .available(true).build();
+        item1 = Item.builder().id(2L).owner(user1).description("Test1").name("Test1").available(true).build();
         item1 = toItem(itemService.addItem(2L, toItemDto(item1)));
-        item2 = Item.builder()
-                .id(3L)
-                .owner(user)
-                .description("Test2")
-                .name("Test2")
-                .available(false).build();
+        item2 = Item.builder().id(3L).owner(user).description("Test2").name("Test2").available(false).build();
         item2 = toItem(itemService.addItem(1L, toItemDto(item2)));
-        booking = bookingRepository.save(Booking.builder()
-                .item(item)
-                .booker(user1)
-                .start(LocalDateTime.now().minusHours(1))
-                .end(LocalDateTime.now().plusHours(1))
-                .status(Status.WAITING).build());
-        booking1 = bookingRepository.save(Booking.builder()
-                .item(item)
-                .booker(user1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().minusHours(1))
-                .status(Status.WAITING).build());
-        booking2 = bookingRepository.save(Booking.builder()
-                .item(item)
-                .booker(user1)
-                .start(LocalDateTime.now().plusHours(1))
-                .end(LocalDateTime.now().plusHours(2))
-                .status(Status.WAITING).build());
+        booking = bookingRepository.save(Booking.builder().item(item).booker(user1).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now().plusHours(1)).status(Status.WAITING).build());
+        booking1 = bookingRepository.save(Booking.builder().item(item).booker(user1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().minusHours(1)).status(Status.WAITING).build());
+        booking2 = bookingRepository.save(Booking.builder().item(item).booker(user1).start(LocalDateTime.now().plusHours(1)).end(LocalDateTime.now().plusHours(2)).status(Status.WAITING).build());
+
     }
 
     @Test
     void addBooking() throws ValidationException {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
-                .itemId(item.getId())
-                .start(LocalDateTime.now().minusHours(1))
-                .end(LocalDateTime.now()).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(item.getId()).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now()).build();
+        List<BookingDto> testBookings = bookingService.getAllBookingByState(2L, "WAITING", 0, 10);
+        assertEquals(3, testBookings.size());
         bookingService.addBooking(2L, bookingEntryDto);
         List<BookingDto> testBookings1 = bookingService.getAllBookingByState(2L, "WAITING", 0, 10);
-
+        assertEquals(4, testBookings1.size());
+        assertEquals(3L, testBookings1.get(0).getId());
+        assertEquals(4L, testBookings1.get(1).getId());
+        assertEquals(1L, testBookings1.get(2).getId());
         assertEquals(2L, testBookings1.get(3).getId());
+        assertTrue(testBookings1.get(0).getStart().isAfter(testBookings1.get(1).getStart()));
+        assertTrue(testBookings1.get(1).getStart().isAfter(testBookings1.get(2).getStart()));
         assertTrue(testBookings1.get(2).getStart().isAfter(testBookings1.get(3).getStart()));
         assertTrue(testBookings1.get(3).getStart().isBefore(testBookings1.get(1).getStart()));
     }
 
     @Test
     void addBooking_InvalidUserId() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
-                .itemId(item.getId())
-                .start(LocalDateTime.now().minusHours(1))
-                .end(LocalDateTime.now()).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(item.getId()).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now()).build();
 
         assertThrows(NotFoundException.class, () -> bookingService.addBooking(100L, bookingEntryDto));
     }
 
     @Test
     void addBooking_InvalidItemId() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
-                .itemId(100L)
-                .start(LocalDateTime.now().minusHours(1))
-                .end(LocalDateTime.now()).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(100L).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now()).build();
 
         assertThrows(NotFoundException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
 
     @Test
     void addBooking_OwnItem() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
-                .itemId(1L).start(LocalDateTime.now().plusHours(1))
-                .end(LocalDateTime.now().plusHours(2)).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(1L).start(LocalDateTime.now().plusHours(1)).end(LocalDateTime.now().plusHours(2)).build();
 
         assertThrows(NotFoundException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
 
     @Test
     void addBooking_Unavailable() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
-                .itemId(3L)
-                .start(LocalDateTime.now().minusHours(1))
-                .end(LocalDateTime.now().minusHours(2)).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(3L).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now().minusHours(2)).build();
 
         assertThrows(NotAvailableException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
 
     @Test
     void addBooking_InvalidDate() {
-        BookingEntryDto bookingEntryDto = BookingEntryDto.builder()
-                .itemId(1L)
-                .start(LocalDateTime.now().minusHours(1))
-                .end(LocalDateTime.now().minusHours(2)).build();
+        BookingEntryDto bookingEntryDto = BookingEntryDto.builder().itemId(1L).start(LocalDateTime.now().minusHours(1)).end(LocalDateTime.now().minusHours(2)).build();
 
         assertThrows(NotAvailableException.class, () -> bookingService.addBooking(user.getId(), bookingEntryDto));
     }
@@ -168,11 +128,8 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookings = bookingService.getAllBookingByState(2L, "WAITING", 0, 10);
-
         assertEquals(1, testBookings.size());
-
         List<BookingDto> testBookingStatusCurrent = bookingService.getAllBookingByState(2L, "CURRENT", 0, 10);
-
         assertEquals(1, testBookingStatusCurrent.size());
         assertEquals(1L, testBookingStatusCurrent.get(0).getId());
     }
@@ -181,7 +138,6 @@ public class BookingServiceImplTests {
     void disApproveBooking() throws ValidationException {
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusRejected = bookingService.getAllBookingByState(2L, "REJECTED", 0, 10);
-
         assertEquals(1, testBookingStatusRejected.size());
         assertEquals(3L, testBookingStatusRejected.get(0).getId());
     }
@@ -210,7 +166,6 @@ public class BookingServiceImplTests {
     @Test
     void getBookingById() {
         BookingDto bookingDto = bookingService.getBookingById(1L, 1L);
-
         assertEquals(1L, bookingDto.getId());
         assertEquals(1L, bookingDto.getItem().getId());
         assertEquals("test1", bookingDto.getBooker().getName());
@@ -235,7 +190,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookings = bookingService.getAllBookingByState(2L, "WAITING", 0, 10);
-
         assertEquals(1, testBookings.size());
     }
 
@@ -254,7 +208,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusRejected = bookingService.getAllBookingByState(2L, "REJECTED", 0, 10);
-
         assertEquals(1, testBookingStatusRejected.size());
         assertEquals(3L, testBookingStatusRejected.get(0).getId());
     }
@@ -264,7 +217,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusCurrent = bookingService.getAllBookingByState(2L, "CURRENT", 0, 10);
-
         assertEquals(1, testBookingStatusCurrent.size());
         assertEquals(1L, testBookingStatusCurrent.get(0).getId());
     }
@@ -274,7 +226,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusAll = bookingService.getAllBookingByState(2L, "ALL", 0, 10);
-
         assertEquals(3, testBookingStatusAll.size());
         assertEquals(3L, testBookingStatusAll.get(0).getId());
         assertEquals(1L, testBookingStatusAll.get(1).getId());
@@ -291,7 +242,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusAll = bookingService.getAllOwnersBookingByState(1L, "ALL", 0, 10);
-
         assertEquals(3, testBookingStatusAll.size());
         assertEquals(3L, testBookingStatusAll.get(0).getId());
         assertEquals(1L, testBookingStatusAll.get(1).getId());
@@ -308,7 +258,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusPast = bookingService.getAllBookingByState(2L, "PAST", 0, 10);
-
         assertEquals(1, testBookingStatusPast.size());
         assertEquals(2L, testBookingStatusPast.get(0).getId());
     }
@@ -318,7 +267,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusFuture = bookingService.getAllBookingByState(2L, "FUTURE", 0, 10);
-
         assertEquals(1, testBookingStatusFuture.size());
         assertEquals(3L, testBookingStatusFuture.get(0).getId());
     }
@@ -328,7 +276,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookings = bookingService.getAllOwnersBookingByState(1L, "WAITING", 0, 10);
-
         assertEquals(1, testBookings.size());
         assertEquals(2L, testBookings.get(0).getId());
         assertEquals(1L, testBookings.get(0).getItem().getOwner().getId());
@@ -349,7 +296,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusRejected = bookingService.getAllOwnersBookingByState(1L, "REJECTED", 0, 10);
-
         assertEquals(1, testBookingStatusRejected.size());
         assertEquals(3L, testBookingStatusRejected.get(0).getId());
         assertEquals(1L, testBookingStatusRejected.get(0).getItem().getOwner().getId());
@@ -360,7 +306,6 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusCurrent = bookingService.getAllOwnersBookingByState(1L, "CURRENT", 0, 10);
-
         assertEquals(1, testBookingStatusCurrent.size());
         assertEquals(1L, testBookingStatusCurrent.get(0).getId());
         assertEquals(1L, testBookingStatusCurrent.get(0).getItem().getOwner().getId());
@@ -371,18 +316,17 @@ public class BookingServiceImplTests {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusPast = bookingService.getAllOwnersBookingByState(1L, "PAST", 0, 10);
-
         assertEquals(1, testBookingStatusPast.size());
         assertEquals(2L, testBookingStatusPast.get(0).getId());
         assertEquals(1L, testBookingStatusPast.get(0).getItem().getOwner().getId());
     }
+
 
     @Test
     void getAllOwnersBookingByStateFuture() throws ValidationException {
         bookingService.approveBooking(1L, 1L, true);
         bookingService.approveBooking(1L, 3L, false);
         List<BookingDto> testBookingStatusFuture = bookingService.getAllOwnersBookingByState(1L, "FUTURE", 0, 10);
-
         assertEquals(1, testBookingStatusFuture.size());
         assertEquals(3L, testBookingStatusFuture.get(0).getId());
         assertEquals(1L, testBookingStatusFuture.get(0).getItem().getOwner().getId());

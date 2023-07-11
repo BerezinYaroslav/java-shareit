@@ -17,7 +17,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class BookingRepositoryIntegrationTests {
+public class BookingRepositoryIntegrationTest {
+
     @Autowired
     private TestEntityManager entityManager;
 
@@ -25,18 +26,16 @@ public class BookingRepositoryIntegrationTests {
     private BookingRepository bookingRepository;
 
     @Test
-    public void findAllByBookerId() {
+    public void testFindAllByBookerId() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
         Booking booking1 = Booking.builder().booker(user).item(item1).build();
         Booking booking2 = Booking.builder().booker(user).item(item1).build();
         Booking booking3 = Booking.builder().booker(user1).item(item1).build();
-
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
@@ -50,7 +49,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByBookerIdAndStatus() {
+    public void testFindAllByBookerIdAndStatus() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -58,15 +57,12 @@ public class BookingRepositoryIntegrationTests {
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
         Status status = Status.APPROVED;
-
         Booking booking1 = Booking.builder().booker(user).item(item1).status(Status.APPROVED).build();
         Booking booking2 = Booking.builder().booker(user).item(item1).status(Status.APPROVED).build();
         Booking booking3 = Booking.builder().booker(user1).item(item1).status(Status.APPROVED).build();
-
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
         Page<Booking> resultPage = bookingRepository.findAllByBookerIdAndStatus(user.getId(), status, pageable);
 
@@ -76,37 +72,21 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByBookerIdAndEndBefore() {
+    public void testFindAllByBookerIdAndEndBefore() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().minusHours(1)).build();
-        Booking booking2 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().minusHours(1)).build();
-        Booking booking3 = Booking.builder()
-                .booker(user1)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-
+        Booking booking1 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().minusHours(1)).build();
+        Booking booking2 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().minusHours(1)).build();
+        Booking booking3 = Booking.builder().booker(user1).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Booking> resultPage = bookingRepository
-                .findAllByBookerIdAndEndBefore(user.getId(), LocalDateTime.now(), pageable);
+        Page<Booking> resultPage = bookingRepository.findAllByBookerIdAndEndBefore(user.getId(), LocalDateTime.now(), pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(2);
@@ -114,37 +94,21 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByBookerIdAndStartAfter() {
+    public void testFindAllByBookerIdAndStartAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking2 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking3 = Booking.builder()
-                .booker(user1)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-
+        Booking booking1 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking2 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking3 = Booking.builder().booker(user1).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Booking> resultPage = bookingRepository
-                .findAllByBookerIdAndStartAfter(user.getId(), LocalDateTime.now(), pageable);
+        Page<Booking> resultPage = bookingRepository.findAllByBookerIdAndStartAfter(user.getId(), LocalDateTime.now(), pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(2);
@@ -152,37 +116,21 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByBookerIdAndStartBeforeAndEndAfter() {
+    public void testFindAllByBookerIdAndStartBeforeAndEndAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking2 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking3 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-
+        Booking booking1 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking2 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking3 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Booking> resultPage = bookingRepository
-                .findAllByBookerIdAndStartBeforeAndEndAfter(user.getId(), LocalDateTime.now(), LocalDateTime.now(), pageable);
+        Page<Booking> resultPage = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByStart(user.getId(), LocalDateTime.now(), LocalDateTime.now(), pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(1);
@@ -190,7 +138,7 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByItemOwnerIdAndStatus() {
+    public void testFindAllByItemOwnerIdAndStatus() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
@@ -198,18 +146,14 @@ public class BookingRepositoryIntegrationTests {
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
         Status status = Status.APPROVED;
-
         Booking booking1 = Booking.builder().booker(user).item(item1).status(Status.APPROVED).build();
         Booking booking2 = Booking.builder().booker(user).item(item1).status(Status.APPROVED).build();
         Booking booking3 = Booking.builder().booker(user1).status(Status.APPROVED).build();
-
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Booking> resultPage = bookingRepository
-                .findAllByItemOwnerIdAndStatus(item1.getOwner().getId(), status, pageable);
+        Page<Booking> resultPage = bookingRepository.findAllByItemOwnerIdAndStatus(item1.getOwner().getId(), status, pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(2);
@@ -217,33 +161,19 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByItemOwnerIdAndEndBefore() {
+    public void testFindAllByItemOwnerIdAndEndBefore() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().minusHours(1)).build();
-        Booking booking2 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().minusHours(1)).build();
-        Booking booking3 = Booking.builder()
-                .booker(user1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-
+        Booking booking1 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().minusHours(1)).build();
+        Booking booking2 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().minusHours(1)).build();
+        Booking booking3 = Booking.builder().booker(user1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
         Page<Booking> resultPage = bookingRepository.findAllByItemOwnerIdAndEndBefore(user.getId(), LocalDateTime.now(), pageable);
 
@@ -253,35 +183,21 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByItemOwnerIdAndStartAfter() {
+    public void testFindAllByItemOwnerIdAndStartAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking2 = Booking.builder()
-                .booker(user).item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking3 = Booking.builder()
-                .booker(user1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-
+        Booking booking1 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking2 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking3 = Booking.builder().booker(user1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Booking> resultPage = bookingRepository
-                .findAllByItemOwnerIdAndStartAfter(user.getId(), LocalDateTime.now(), pageable);
+        Page<Booking> resultPage = bookingRepository.findAllByItemOwnerIdAndStartAfter(user.getId(), LocalDateTime.now(), pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(2);
@@ -289,34 +205,21 @@ public class BookingRepositoryIntegrationTests {
     }
 
     @Test
-    public void findAllByItemOwnerIdAndStartBeforeAndEndAfter() {
+    public void testFindAllByItemOwnerIdAndStartBeforeAndEndAfter() {
         User user = makeUser();
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
         User user1 = User.builder().name("TestUser1").email("test1@mail.com").build();
         entityManager.persist(user1);
-
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking2 = Booking.builder()
-                .booker(user)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-        Booking booking3 = Booking.builder()
-                .booker(user).item(item1)
-                .start(LocalDateTime.now().minusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
-
+        Booking booking1 = Booking.builder().booker(user).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking2 = Booking.builder().booker(user).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking3 = Booking.builder().booker(user).item(item1).start(LocalDateTime.now().minusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
         entityManager.persist(booking2);
         entityManager.persist(booking3);
-
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Booking> resultPage = bookingRepository
-                .findAllByItemOwnerIdAndStartBeforeAndEndAfter(user.getId(), LocalDateTime.now(), LocalDateTime.now(), pageable);
+        Page<Booking> resultPage = bookingRepository.findAllByItemOwnerIdAndStartBeforeAndEndAfter(user.getId(), LocalDateTime.now(), LocalDateTime.now(), pageable);
 
         assertThat(resultPage).isNotEmpty();
         assertThat(resultPage.getContent()).hasSize(1);
@@ -329,14 +232,11 @@ public class BookingRepositoryIntegrationTests {
         entityManager.persist(user);
         Item item1 = Item.builder().owner(user).build();
         entityManager.persist(item1);
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .start(LocalDateTime.now().plusHours(2))
-                .end(LocalDateTime.now().plusHours(1)).build();
+        Booking booking1 = Booking.builder().booker(user).item(item1).status(Status.WAITING).start(LocalDateTime.now().plusHours(2)).end(LocalDateTime.now().plusHours(1)).build();
         entityManager.persist(booking1);
-        List<Booking> bookings = bookingRepository.findByItemId(item1.getId(), Sort.by(Sort.Direction.ASC, "start"));
+        entityManager.flush();
 
+        List<Booking> bookings = bookingRepository.findByItemIdAndStatus(item1.getId(), Sort.by(Sort.Direction.ASC, "start"), Status.WAITING);
         assertThat(bookings).hasSize(1);
         assertThat(bookings).contains(booking1);
     }
@@ -345,14 +245,10 @@ public class BookingRepositoryIntegrationTests {
     void existsByBookerIdAndEndBeforeAndStatus() {
         User user = makeUser();
         entityManager.persist(user);
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .end(LocalDateTime.now().minusHours(1))
-                .status(Status.WAITING).build();
-        entityManager.persist(booking1);
-        Boolean exist = bookingRepository
-                .existsByBookerIdAndEndBeforeAndStatus(user.getId(), LocalDateTime.now(), Status.WAITING);
 
+        Booking booking1 = Booking.builder().booker(user).end(LocalDateTime.now().minusHours(1)).status(Status.WAITING).build();
+        entityManager.persist(booking1);
+        Boolean exist = bookingRepository.existsByBookerIdAndEndBeforeAndStatus(user.getId(), LocalDateTime.now(), Status.WAITING);
         assertThat(exist).isTrue();
     }
 
@@ -364,14 +260,9 @@ public class BookingRepositoryIntegrationTests {
         entityManager.persist(item1);
         Item item2 = Item.builder().build();
         entityManager.persist(item2);
-        Booking booking1 = Booking.builder()
-                .booker(user)
-                .item(item1)
-                .end(LocalDateTime.now().minusHours(1))
-                .status(Status.WAITING).build();
+        Booking booking1 = Booking.builder().booker(user).item(item1).end(LocalDateTime.now().minusHours(1)).status(Status.WAITING).build();
         entityManager.persist(booking1);
         List<Booking> bookings = bookingRepository.findAllByItemOwnerId(user.getId(), PageRequest.of(0, 10)).getContent();
-
         assertThat(bookings).isNotEmpty();
         assertThat(bookings).hasSize(1);
         assertThat(bookings).contains(booking1);

@@ -8,16 +8,18 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JsonTest
-public class UserDtoJsonTests {
+public class UserDtoJsonTest {
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void serializeToJson() throws JsonProcessingException {
+    public void testSerializeToJson() throws JsonProcessingException {
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("John Doe")
                 .email("johndoe@example.com")
                 .build();
+
         String expectedJson = "{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"}";
         String actualJson = objectMapper.writeValueAsString(userDto);
 
@@ -25,13 +27,15 @@ public class UserDtoJsonTests {
     }
 
     @Test
-    public void deserializeFromJson() throws JsonProcessingException {
+    public void testDeserializeFromJson() throws JsonProcessingException {
         String json = "{\"id\":1,\"name\":\"John Doe\",\"email\":\"johndoe@example.com\"}";
+
         UserDto expectedUserDto = UserDto.builder()
                 .id(1L)
                 .name("John Doe")
                 .email("johndoe@example.com")
                 .build();
+
         UserDto actualUserDto = objectMapper.readValue(json, UserDto.class);
 
         assertEquals(expectedUserDto, actualUserDto);

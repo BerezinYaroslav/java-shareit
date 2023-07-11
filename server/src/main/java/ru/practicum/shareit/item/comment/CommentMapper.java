@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.comment;
 
 public class CommentMapper {
+
     public static Comment toComment(CommentDto commentDto) {
         return Comment.builder()
                 .id(commentDto.getId())
@@ -18,4 +19,5 @@ public class CommentMapper {
                 .created(comment.getCreated())
                 .build();
     }
+
 }

@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JsonTest
-public class CommentDtoTests {
-    private final ObjectMapper objectMapper = new ObjectMapper()
+public class CommentDtoTest {
+    ObjectMapper objectMapper = new ObjectMapper()
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .setDateFormat(new StdDateFormat().withColonInTimeZone(true));
 
     @Test
-    void commentDtoSerialization() throws JsonProcessingException {
+    void testCommentDtoSerialization() throws JsonProcessingException {
         objectMapper.registerModule(new JavaTimeModule());
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
@@ -29,16 +29,18 @@ public class CommentDtoTests {
                 .created(LocalDateTime.parse("2023-05-29T12:34:56.789"))
                 .build();
         String json = objectMapper.writeValueAsString(commentDto);
-        String expectedJson = "{\"id\":1,\"text\":\"This is a comment\",\"authorName\":\"John Doe\",\"itemId\":2,\"created\":\"2023-05-29T12:34:56.789\"}";
 
+        String expectedJson = "{\"id\":1,\"text\":\"This is a comment\",\"authorName\":\"John Doe\",\"itemId\":2,\"created\":\"2023-05-29T12:34:56.789\"}";
         assertEquals(expectedJson, json);
     }
 
     @Test
-    void commentDtoDeserialization() throws JsonProcessingException {
+    void testCommentDtoDeserialization() throws JsonProcessingException {
         objectMapper.registerModule(new JavaTimeModule());
         String json = "{\"id\":1,\"text\":\"This is a comment\",\"authorName\":\"John Doe\",\"itemId\":2,\"created\":\"2023-05-29T12:34:56.789\"}";
+
         CommentDto commentDto = objectMapper.readValue(json, CommentDto.class);
+
         CommentDto expectedCommentDto = CommentDto.builder()
                 .id(1L)
                 .text("This is a comment")

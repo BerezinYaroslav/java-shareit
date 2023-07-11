@@ -16,11 +16,12 @@ import java.util.Collections;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.practicum.shareit.request.ItemRequestControllerTests.asJsonString;
+import static ru.practicum.shareit.request.ItemRequestControllerTest.asJsonString;
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc
-public class UserControllerTests {
+class UserControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -29,8 +30,7 @@ public class UserControllerTests {
 
     @Test
     void getUsers() throws Exception {
-        Mockito.when(userService.getUsers())
-                .thenReturn(Collections.emptyList());
+        Mockito.when(userService.getUsers()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                 .andExpect(status().isOk())
@@ -40,8 +40,7 @@ public class UserControllerTests {
     @Test
     void getUserById_invalidId() throws Exception {
         Long invalidId = 100L;
-        Mockito.when(userService.getUserById(invalidId))
-                .thenThrow(NotFoundException.class);
+        Mockito.when(userService.getUserById(invalidId)).thenThrow(NotFoundException.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/" + invalidId))
                 .andExpect(status().isNotFound());
@@ -58,7 +57,6 @@ public class UserControllerTests {
 
         Mockito.when(userService.addUser(Mockito.any(UserDto.class)))
                 .thenReturn(userDto);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .content(asJsonString(userDto))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +74,6 @@ public class UserControllerTests {
                 .name("test")
                 .email("test@test.com")
                 .build();
-
         Mockito.when(userService.updateUser(Mockito.eq(id), Mockito.any(UserDto.class)))
                 .thenReturn(userDto);
 
@@ -96,7 +93,6 @@ public class UserControllerTests {
                 .name("test")
                 .email("test@test.com")
                 .build();
-
         Mockito.when(userService.updateUser(Mockito.eq(invalidId), Mockito.any(UserDto.class)))
                 .thenThrow(NotFoundException.class);
 

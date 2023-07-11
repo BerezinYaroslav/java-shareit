@@ -21,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class UserServiceImplTests {
+class UserServiceImplTest {
+
     private final UserServiceImpl userService;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -38,7 +39,6 @@ public class UserServiceImplTests {
     @Test
     void getUsers() {
         List<UserDto> users = userService.getUsers();
-
         assertEquals(1, users.size());
         assertEquals("test", users.get(0).getName());
         assertEquals("test@test.ru", users.get(0).getEmail());
@@ -48,8 +48,8 @@ public class UserServiceImplTests {
     void getUserById() {
         UserDto userDto = userService.addUser(createUserDto("test2", "test2@test.ru"));
         Long userId = userDto.getId();
-        UserDto retrievedUser = userService.getUserById(userId);
 
+        UserDto retrievedUser = userService.getUserById(userId);
         assertNotNull(retrievedUser);
         assertEquals("test2", retrievedUser.getName());
         assertEquals("test2@test.ru", retrievedUser.getEmail());
@@ -63,15 +63,14 @@ public class UserServiceImplTests {
     @Test
     void addUser() {
         UserDto userDto = createUserDto("test3", "test3@test.ru");
-        UserDto addedUser = userService.addUser(userDto);
 
+        UserDto addedUser = userService.addUser(userDto);
         assertNotNull(addedUser);
         assertNotNull(addedUser.getId());
         assertEquals("test3", addedUser.getName());
         assertEquals("test3@test.ru", addedUser.getEmail());
 
         Optional<User> retrievedUser = userRepository.findById(addedUser.getId());
-
         assertTrue(retrievedUser.isPresent());
         assertEquals("test3", retrievedUser.get().getName());
         assertEquals("test3@test.ru", retrievedUser.get().getEmail());
@@ -88,15 +87,14 @@ public class UserServiceImplTests {
     void updateUser() {
         UserDto userDto = userService.addUser(createUserDto("test4", "test4@test.ru"));
         Long userId = userDto.getId();
-        UserDto updatedUser = userService.updateUser(userId, createUserDto("updated", "updated@test.ru"));
 
+        UserDto updatedUser = userService.updateUser(userId, createUserDto("updated", "updated@test.ru"));
         assertNotNull(updatedUser);
         assertEquals(userId, updatedUser.getId());
         assertEquals("updated", updatedUser.getName());
         assertEquals("updated@test.ru", updatedUser.getEmail());
 
         Optional<User> retrievedUser = userRepository.findById(userId);
-
         assertTrue(retrievedUser.isPresent());
         assertEquals("updated", retrievedUser.get().getName());
         assertEquals("updated@test.ru", retrievedUser.get().getEmail());
@@ -106,16 +104,14 @@ public class UserServiceImplTests {
     void deleteUser() {
         UserDto userDto = userService.addUser(createUserDto("test5", "test5@test.ru"));
         Long userId = userDto.getId();
-        boolean isDeleted = userService.deleteUser(userId);
 
+        boolean isDeleted = userService.deleteUser(userId);
         assertTrue(isDeleted);
 
         Optional<User> deletedUser = userRepository.findById(userId);
-
         assertFalse(deletedUser.isPresent());
 
-        List<Item> items = new ArrayList<>(itemRepository.findAllByOwnerId(userId));
-
+        List<Item> items = new ArrayList<>(itemRepository.findAllByOwnerIdOrderById(userId));
         assertTrue(items.isEmpty());
     }
 }

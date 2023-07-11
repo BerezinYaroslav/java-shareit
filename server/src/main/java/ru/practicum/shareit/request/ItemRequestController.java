@@ -10,7 +10,8 @@ import java.util.List;
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
 public class ItemRequestController {
-    private final ItemRequestService requestService;
+
+    private final ItemRequestsService requestService;
 
     @PostMapping()
     public ItemRequestDto addRequest(@RequestHeader("X-Sharer-User-Id") Long id,
@@ -22,6 +23,7 @@ public class ItemRequestController {
     public List<ItemRequestWithItems> getOwnRequests(@RequestHeader("X-Sharer-User-Id") Long id,
                                                      @RequestParam(defaultValue = "0") int from,
                                                      @RequestParam(defaultValue = "10") int size) throws ValidationException {
+
         return requestService.getOwnRequests(id, from, size);
     }
 
@@ -33,8 +35,9 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestWithItems getRequestById(@RequestHeader("X-Sharer-User-Id") Long id,
-                                               @PathVariable Long requestId) {
+    public ItemRequestWithItems getRequestById(@RequestHeader("X-Sharer-User-Id")
+                                               Long id, @PathVariable Long requestId) {
         return requestService.getRequestById(id, requestId);
     }
+
 }

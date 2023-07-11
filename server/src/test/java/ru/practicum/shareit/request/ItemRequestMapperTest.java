@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ItemRequestMapperTests {
+class ItemRequestMapperTest {
+
     @Test
     void toRequestDto() {
         ItemRequest itemRequest = ItemRequest.builder().id(1L).description("Test item request").requestor(User.builder().build()).created(Timestamp.valueOf(LocalDateTime.now())).build();
         ItemRequestDto itemRequestDto = ItemRequestMapper.toRequestDto(itemRequest);
-
         assertEquals(itemRequest.getId(), itemRequestDto.getId());
         assertEquals(itemRequest.getDescription(), itemRequestDto.getDescription());
         assertEquals(itemRequest.getRequestor(), itemRequestDto.getRequestor());
@@ -24,7 +24,6 @@ public class ItemRequestMapperTests {
     void toRequest() {
         ItemRequestDto itemRequestDto = ItemRequestDto.builder().id(1L).description("Test item request").requestor(User.builder().build()).created(Timestamp.valueOf(LocalDateTime.now())).build();
         ItemRequest itemRequest = ItemRequestMapper.toRequest(itemRequestDto);
-
         assertEquals(itemRequestDto.getId(), itemRequest.getId());
         assertEquals(itemRequestDto.getDescription(), itemRequest.getDescription());
         assertEquals(itemRequestDto.getRequestor(), itemRequest.getRequestor());
@@ -35,7 +34,6 @@ public class ItemRequestMapperTests {
     void toRequestWithItems() {
         ItemRequest itemRequest = ItemRequest.builder().id(1L).description("Test item request").created(Timestamp.valueOf(LocalDateTime.now())).build();
         ItemRequestWithItems requestWithItems = ItemRequestMapper.toRequestWithItems(itemRequest);
-
         assertEquals(itemRequest.getId(), requestWithItems.getId());
         assertEquals(itemRequest.getCreated(), requestWithItems.getCreated());
         assertEquals(itemRequest.getDescription(), requestWithItems.getDescription());

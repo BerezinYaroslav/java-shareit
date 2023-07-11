@@ -12,6 +12,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Validated
 public class UserController {
+
     private final UserClient client;
 
     @GetMapping

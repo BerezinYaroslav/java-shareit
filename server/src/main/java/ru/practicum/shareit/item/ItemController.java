@@ -12,6 +12,8 @@ import java.util.List;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
+
+
     private final ItemService itemService;
 
     @GetMapping
@@ -20,8 +22,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                               @PathVariable Long itemId) {
+    public ItemDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
         return itemService.getItemById(userId, itemId);
     }
 
@@ -34,21 +35,19 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") @DefaultValue(value = "0L") Long id,
-                              @RequestBody ItemDto itemDto,
-                              @PathVariable Long itemId) {
+                              @RequestBody ItemDto itemDto, @PathVariable Long itemId) {
         return itemService.updateItem(id, itemDto, itemId);
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long id,
-                           @RequestBody ItemDto itemDto) {
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long id, @RequestBody ItemDto itemDto) {
         return itemService.addItem(id, itemDto);
     }
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Long id,
-                                 @PathVariable Long itemId,
-                                 @RequestBody CommentDto commentDto) {
+                                 @PathVariable Long itemId, @RequestBody CommentDto commentDto) {
         return itemService.addComment(id, itemId, commentDto);
     }
+
 }

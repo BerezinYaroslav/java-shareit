@@ -27,19 +27,22 @@ import static ru.practicum.shareit.user.UserMapper.toUserDto;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class ItemRequestServiceImplTests {
+class ItemRequestServiceImplTest {
+
     private final ItemRequestServiceImpl itemRequestService;
+
     private final UserServiceImpl userService;
-    private final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     private User user = new User();
+
     private User user1 = new User();
     private User user2 = new User();
-
     private ItemRequest itemRequest = new ItemRequest();
     private ItemRequest itemRequest1 = new ItemRequest();
 
     private final Item item = new Item();
+
+    private final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
     @BeforeEach
     public void beforeEach() {
@@ -56,7 +59,6 @@ public class ItemRequestServiceImplTests {
     @Test
     void addRequest() {
         ItemRequestDto testItem = itemRequestService.addRequest(user.getId(), toRequestDto(itemRequest));
-
         assertEquals(1L, testItem.getId());
         assertEquals(3L, testItem.getRequestor().getId());
         assertNotNull(testItem.getCreated());
@@ -77,10 +79,8 @@ public class ItemRequestServiceImplTests {
     void getOwnRequests() throws ValidationException {
         ItemRequestDto testItem = itemRequestService.addRequest(1L, toRequestDto(itemRequest));
         ItemRequestDto testItem2 = itemRequestService.addRequest(2L, toRequestDto(itemRequest1));
-
         List<ItemRequestWithItems> testOwnRequests = itemRequestService.getOwnRequests(1L, 0, 10);
         List<ItemRequestWithItems> testOwnRequests1 = itemRequestService.getOwnRequests(2L, 0, 10);
-
         assertEquals(1, testOwnRequests.size());
         assertEquals(1, testOwnRequests1.size());
         assertEquals("test", testOwnRequests.get(0).getDescription());
@@ -98,11 +98,9 @@ public class ItemRequestServiceImplTests {
     void getAll() throws ValidationException {
         ItemRequestDto testItem = itemRequestService.addRequest(1L, toRequestDto(itemRequest));
         ItemRequestDto testItem2 = itemRequestService.addRequest(2L, toRequestDto(itemRequest1));
-
         List<ItemRequestWithItems> testOwnRequests = itemRequestService.getAll(1L, 0, 10);
         List<ItemRequestWithItems> testOwnRequests1 = itemRequestService.getAll(2L, 0, 10);
         List<ItemRequestWithItems> testOwnRequests2 = itemRequestService.getAll(3L, 0, 10);
-
         assertEquals(1, testOwnRequests.size());
         assertEquals(1, testOwnRequests1.size());
         assertEquals(2, testOwnRequests2.size());
@@ -110,6 +108,7 @@ public class ItemRequestServiceImplTests {
         assertEquals("test", testOwnRequests1.get(0).getDescription());
         assertEquals("test1", testOwnRequests2.get(0).getDescription());
         assertEquals("test", testOwnRequests2.get(1).getDescription());
+
     }
 
     @Test
@@ -123,10 +122,8 @@ public class ItemRequestServiceImplTests {
     void getRequestById() {
         ItemRequestDto testItem = itemRequestService.addRequest(1L, toRequestDto(itemRequest));
         ItemRequestDto testItem2 = itemRequestService.addRequest(2L, toRequestDto(itemRequest1));
-
         Long firstId = testItem.getId();
         Long secondId = testItem2.getId();
-
         assertEquals(1L, firstId);
         assertEquals(2L, secondId);
         assertEquals("test", itemRequestService.getRequestById(1L, firstId).getDescription());

@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
@@ -17,6 +18,9 @@ import static ru.practicum.shareit.user.UserMapper.toUserDto;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+
+    @Autowired
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
@@ -52,9 +56,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean deleteUser(Long userId) {
         if (userRepository.existsById(userId)) {
-            itemRepository.deleteAll(itemRepository.findAllByOwnerId(userId));
+            itemRepository.deleteAll(itemRepository.findAllByOwnerIdOrderById(userId));
             userRepository.deleteById(userId);
         }
         return !userRepository.existsById(userId);
     }
+
+
 }

@@ -15,6 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 @Validated
 public class ItemRequestController {
+
     private final RequestClient client;
 
     @PostMapping()
@@ -41,4 +42,5 @@ public class ItemRequestController {
     public ResponseEntity<Object> getRequestById(@RequestHeader("X-Sharer-User-Id") Long id, @PathVariable Long requestId) {
         return client.getRequestById(id, requestId);
     }
+
 }

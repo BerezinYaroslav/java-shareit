@@ -23,15 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ItemRequestController.class)
 @AutoConfigureMockMvc
-public class ItemRequestControllerTests {
+public class ItemRequestControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ItemRequestService requestService;
+    private ItemRequestsService requestService;
+
 
     @Test
-    public void addRequest() throws Exception {
+    public void testAddRequest() throws Exception {
         Long userId = 1L;
         ItemRequestDto itemRequestDto = new ItemRequestDto();
         itemRequestDto.setDescription("Request Description");
@@ -40,47 +42,23 @@ public class ItemRequestControllerTests {
         savedRequest.setId(1L);
         savedRequest.setDescription("Request Description");
 
-        when(requestService.addRequest(eq(userId), any(ItemRequestDto.class)))
-                .thenReturn(savedRequest);
+        when(requestService.addRequest(eq(userId), any(ItemRequestDto.class))).thenReturn(savedRequest);
 
-        mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(itemRequestDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(savedRequest.getId()))
-                .andExpect(jsonPath("$.description").value(savedRequest.getDescription()));
+        mockMvc.perform(post("/requests").header("X-Sharer-User-Id", userId).contentType(MediaType.APPLICATION_JSON).content(asJsonString(itemRequestDto))).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(savedRequest.getId())).andExpect(jsonPath("$.description").value(savedRequest.getDescription()));
     }
 
     @Test
-    public void addRequest_InvalidUser() throws Exception {
+    public void testAddRequest_InvalidUser() throws Exception {
         ItemRequestDto requestDto = new ItemRequestDto();
         requestDto.setDescription("Test description");
 
-        when(requestService.addRequest(anyLong(), any(ItemRequestDto.class)))
-                .thenThrow(new NotFoundException("User not found!"));
+        when(requestService.addRequest(anyLong(), any(ItemRequestDto.class))).thenThrow(new NotFoundException("User not found!"));
 
-        mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", 0L)
-                        .content(asJsonString(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/requests").header("X-Sharer-User-Id", 0L).content(asJsonString(requestDto)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
-//    @Test
-//    public void addRequest_InvalidDescription() throws Exception {
-//        ItemRequestDto requestDto = new ItemRequestDto();
-//        requestDto.setDescription("");
-//
-//        mockMvc.perform(post("/requests")
-//                        .header("X-Sharer-User-Id", 1L)
-//                        .content(asJsonString(requestDto))
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest());
-//    }
-
     @Test
-    public void getOwnRequests() throws Exception {
+    public void testGetOwnRequests() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = 10;
@@ -95,27 +73,29 @@ public class ItemRequestControllerTests {
 
         List<ItemRequestWithItems> ownRequests = Arrays.asList(request1, request2);
 
-        when(requestService.getOwnRequests(eq(userId), anyInt(), anyInt()))
-                .thenReturn(ownRequests);
+        when(requestService.getOwnRequests(eq(userId), anyInt(), anyInt())).thenReturn(ownRequests);
 
         mockMvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", userId)
                         .param("from", String.valueOf(from))
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(request1.getId()))
-                .andExpect(jsonPath("$[0].description").value(request1.getDescription()))
-                .andExpect(jsonPath("$[1].id").value(request2.getId()))
+                .andExpect(jsonPath("$[0].id")
+                        .value(request1.getId()))
+                .andExpect(jsonPath("$[0].description")
+                        .value(request1.getDescription()))
+                .andExpect(jsonPath("$[1].id")
+                        .value(request2.getId()))
                 .andExpect(jsonPath("$[1].description").value(request2.getDescription()));
     }
 
     @Test
-    public void getOwnRequests_InvalidUser() throws Exception {
+    public void testGetOwnRequests_InvalidUser() throws Exception {
         int from = 0;
         int size = 10;
 
-        when(requestService.getOwnRequests(anyLong(), anyInt(), anyInt()))
-                .thenThrow(new NotFoundException("User not found!"));
+        when(requestService.getOwnRequests(anyLong(), anyInt(), anyInt())).thenThrow(new NotFoundException("User not found!"));
+
 
         mockMvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", 0L)
@@ -125,13 +105,11 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void getOwnRequests_InvalidPageFrom() throws Exception {
+    public void testGetOwnRequests_InvalidPageFrom() throws Exception {
         int from = -1;
         int size = 10;
 
-        when(requestService.getOwnRequests(anyLong(), anyInt(), anyInt()))
-                .thenThrow(new ValidationException(""));
-
+        when(requestService.getOwnRequests(anyLong(), anyInt(), anyInt())).thenThrow(new ValidationException(""));
         mockMvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", 0L)
                         .param("from", String.valueOf(from))
@@ -140,13 +118,11 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void getOwnRequests_InvalidPageSize() throws Exception {
+    public void testGetOwnRequests_InvalidPageSize() throws Exception {
         int from = 0;
         int size = -1;
 
-        when(requestService.getOwnRequests(anyLong(), anyInt(), anyInt()))
-                .thenThrow(new ValidationException(""));
-
+        when(requestService.getOwnRequests(anyLong(), anyInt(), anyInt())).thenThrow(new ValidationException(""));
         mockMvc.perform(get("/requests")
                         .header("X-Sharer-User-Id", 0L)
                         .param("from", String.valueOf(from))
@@ -154,8 +130,9 @@ public class ItemRequestControllerTests {
                 .andExpect(status().isInternalServerError());
     }
 
+
     @Test
-    public void getAllRequests() throws Exception {
+    public void testGetAllRequests() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = 10;
@@ -170,27 +147,18 @@ public class ItemRequestControllerTests {
 
         List<ItemRequestWithItems> allRequests = Arrays.asList(request1, request2);
 
-        when(requestService.getAll(eq(userId), anyInt(), anyInt()))
-                .thenReturn(allRequests);
+        when(requestService.getAll(eq(userId), anyInt(), anyInt())).thenReturn(allRequests);
 
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size)))
-                .andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value(request1.getId()))
-                .andExpect(jsonPath("$[0].description").value(request1.getDescription()))
-                .andExpect(jsonPath("$[1].id").value(request2.getId()))
-                .andExpect(jsonPath("$[1].description").value(request2.getDescription()));
+        mockMvc.perform(get("/requests/all").header("X-Sharer-User-Id", userId).param("from", String.valueOf(from)).param("size", String.valueOf(size))).andExpect(status().isOk()).andExpect(jsonPath("$[0].id").value(request1.getId())).andExpect(jsonPath("$[0].description").value(request1.getDescription())).andExpect(jsonPath("$[1].id").value(request2.getId())).andExpect(jsonPath("$[1].description").value(request2.getDescription()));
     }
 
     @Test
-    public void getAllRequests_InvalidPageFrom() throws Exception {
+    public void testGetAllRequests_InvalidPageFrom() throws Exception {
         Long userId = 1L;
         int from = -1;
         int size = 10;
 
-        when(requestService.getAll(anyLong(), anyInt(), anyInt()))
-                .thenThrow(new ValidationException(""));
+        when(requestService.getAll(anyLong(), anyInt(), anyInt())).thenThrow(new ValidationException(""));
 
         mockMvc.perform(get("/requests/all")
                         .header("X-Sharer-User-Id", userId)
@@ -200,14 +168,12 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void getAllRequests_InvalidPageSize() throws Exception {
+    public void testGetAllRequests_InvalidPageSize() throws Exception {
         Long userId = 1L;
         int from = 0;
         int size = -1;
 
-        when(requestService.getAll(anyLong(), anyInt(), anyInt()))
-                .thenThrow(new ValidationException(""));
-
+        when(requestService.getAll(anyLong(), anyInt(), anyInt())).thenThrow(new ValidationException(""));
         mockMvc.perform(get("/requests/all")
                         .header("X-Sharer-User-Id", userId)
                         .param("from", String.valueOf(from))
@@ -216,7 +182,7 @@ public class ItemRequestControllerTests {
     }
 
     @Test
-    public void getRequestById() throws Exception {
+    public void testGetRequestById() throws Exception {
         Long userId = 1L;
         Long requestId = 1L;
 
@@ -224,13 +190,13 @@ public class ItemRequestControllerTests {
         request.setId(requestId);
         request.setDescription("Request 1");
 
-        when(requestService.getRequestById(eq(userId), eq(requestId)))
-                .thenReturn(request);
+        when(requestService.getRequestById(eq(userId), eq(requestId))).thenReturn(request);
 
         mockMvc.perform(get("/requests/{requestId}", requestId)
                         .header("X-Sharer-User-Id", userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(request.getId()))
+                .andExpect(jsonPath("$.id")
+                        .value(request.getId()))
                 .andExpect(jsonPath("$.description").value(request.getDescription()));
     }
 

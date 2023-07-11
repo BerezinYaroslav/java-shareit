@@ -1,14 +1,15 @@
 package ru.practicum.shareit.request;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.shareit.user.UserService;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
 public class ItemRequestMapper {
-    private final UserService userService;
+
+    @Autowired
+    private UserService userService;
 
     public static ItemRequestDto toRequestDto(ItemRequest itemRequest) {
         return ItemRequestDto.builder()
@@ -36,4 +37,5 @@ public class ItemRequestMapper {
                 .description(itemRequest.getDescription())
                 .build();
     }
+
 }

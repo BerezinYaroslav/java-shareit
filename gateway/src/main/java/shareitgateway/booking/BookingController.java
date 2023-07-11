@@ -14,13 +14,16 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
+
 @Controller
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
 @Validated
 public class BookingController {
+
     private final BookingClient bookingClient;
+
 
     @Validated
     @PostMapping()
@@ -51,4 +54,5 @@ public class BookingController {
         BookingState state = BookingState.from(stateParam).orElseThrow(() -> new NotSupportedStateException("Unknown state: " + stateParam));
         return bookingClient.getAllOwnersBookingByState(userId, state, from, size);
     }
+
 }

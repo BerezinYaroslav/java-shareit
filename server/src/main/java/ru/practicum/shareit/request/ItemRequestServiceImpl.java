@@ -12,6 +12,7 @@ import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.transaction.Transactional;
 import javax.xml.bind.ValidationException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -23,11 +24,15 @@ import static ru.practicum.shareit.request.ItemRequestMapper.*;
 
 @Service
 @RequiredArgsConstructor
-public class ItemRequestServiceImpl implements ItemRequestService {
-    private final ItemRequestRepository itemRequestsRepository;
+public class ItemRequestServiceImpl implements ItemRequestsService {
+
+    private final ItemRequestsRepository itemRequestsRepository;
+
     private final ItemRepository itemRepository;
+
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public ItemRequestDto addRequest(Long id, ItemRequestDto itemRequestDto) {
         ItemRequest item = toRequest(itemRequestDto);
@@ -43,11 +48,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User Not found!");
         }
-        if (from < 0 || size < 0) {
-            throw new ValidationException("");
-        }
-
-        Pageable pageable = PageRequest.of(from, size).withSort(Sort.by("created").descending());
+        Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size).withSort(Sort.by("created").descending());
         Page<ItemRequestWithItems> requests = itemRequestsRepository
                 .findByRequestorId(id, pageable).map(this::setItems);
         return requests.stream().collect(Collectors.toList());
@@ -58,15 +59,12 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("User Not found!");
         }
-        if (from < 0 || size < 0) {
-            throw new ValidationException("");
-        }
-
-        Pageable pageable = PageRequest.of(from, size).withSort(Sort.by("created").descending());
+        Pageable pageable = PageRequest.of(from > 0 ? from / size : 0, size).withSort(Sort.by("created").descending());
         return itemRequestsRepository.findAllByRequestorIdNot(id, pageable)
                 .map(this::setItems).stream().collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public ItemRequestWithItems getRequestById(Long id, Long requestId) {
         if (!userRepository.existsById(id)) {
@@ -91,4 +89,5 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
         return request;
     }
+
 }
