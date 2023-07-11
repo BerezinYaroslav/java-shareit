@@ -57,8 +57,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
         int page = Math.round((float) from / size);
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
-        List<ItemRequestDto> itemRequestDto = listToItemRequestDto(itemRequestRepository.
-                getAllItemRequestForUserNull(userId, pageable));
+        List<ItemRequestDto> itemRequestDto = listToItemRequestDto(itemRequestRepository
+                .getAllItemRequestForUserNull(userId, pageable));
 
         for (ItemRequestDto dto : itemRequestDto) {
             List<Item> items = itemRepository.findAllItemWhereRequester(dto.getId());
