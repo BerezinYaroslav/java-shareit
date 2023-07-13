@@ -10,13 +10,13 @@ import java.util.List;
 public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
     @Query("select r " +
             "from ItemRequest as r " +
-            "where r.requester.id = ?1 " +
+            "where r.requester.id = :userId " +
             "order by r.created desc ")
     List<ItemRequest> getAllItemRequestForUser(Long userId);
 
     @Query("select r " +
             "from ItemRequest as r " +
-            "where r.requester.id != ?1 " +
+            "where r.requester.id != :userId " +
             "order by r.created desc")
     List<ItemRequest> getAllItemRequestForUserNull(Long userId, Pageable pageable);
 }
