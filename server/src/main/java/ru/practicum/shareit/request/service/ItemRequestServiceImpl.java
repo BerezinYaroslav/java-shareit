@@ -32,7 +32,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private Long id = 0L;
 
     @Override
-    public List<ItemRequestDto> getRequests(Long userId) throws BadRequestException {
+    public List<ItemRequestDto> getRequests(Long userId) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.getRequests)");
         }
@@ -47,7 +47,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public List<ItemRequestDto> getRequestsFrom(Long userId, Integer from, Integer size) throws BadRequestException {
+    public List<ItemRequestDto> getRequestsFrom(Long userId, Integer from, Integer size) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.getRequestsById)");
         }
@@ -68,7 +68,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestDto getRequestsById(Long userId, Long requestId) throws BadRequestException {
+    public ItemRequestDto getRequestsById(Long userId, Long requestId) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.getRequestsById)");
         }
@@ -83,7 +83,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public ItemRequestDto createRequests(Long userId, ItemRequestDto itemRequestDto) throws BadRequestException {
+    public ItemRequestDto createRequests(Long userId, ItemRequestDto itemRequestDto) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Указанного пользователя не существует(ItemRequestServiceImpl.create)");
         }

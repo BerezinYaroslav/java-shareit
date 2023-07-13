@@ -12,9 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    @Override
-    Booking getOne(Long id);
-
     @Query("select bok " +
             "from Booking as bok " +
             "where bok.booker.id = ?1 " +

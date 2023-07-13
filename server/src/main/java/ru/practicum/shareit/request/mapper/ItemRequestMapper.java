@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.mapper;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -7,6 +8,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+@UtilityClass
 public class ItemRequestMapper {
     public static ItemRequest makeItemRequest(ItemRequestDto itemRequestDto) throws BadRequestException {
         ItemRequest itemRequest = new ItemRequest();
@@ -32,7 +34,6 @@ public class ItemRequestMapper {
         for (ItemRequest request : itemRequest) {
             dtos.add(makeItemRequestDto(request));
         }
-
         return dtos;
     }
 }

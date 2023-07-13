@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto getUserById(Long idUser) throws BadRequestException {
+    public UserDto getUserById(Long idUser) {
         if (idUser > returnId()) {
             throw new NotFoundException("Заданный Id отсутствует (User)");
         }
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User createUser(UserDto user) throws BadRequestException, CloneNotSupportedException {
+    public User createUser(UserDto user) throws CloneNotSupportedException {
         User newUser = UserMapper.makeUser(user);
 
         if (newUser.getEmail() == (null)) {
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User updateUserById(Long id, UserDto userDto) throws CloneNotSupportedException, BadRequestException {
+    public User updateUserById(Long id, UserDto userDto) throws CloneNotSupportedException {
         User adUser = UserMapper.makeUser(userDto);
         adUser.setId(id);
 

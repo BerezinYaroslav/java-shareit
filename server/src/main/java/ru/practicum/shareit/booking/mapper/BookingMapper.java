@@ -1,22 +1,17 @@
 package ru.practicum.shareit.booking.mapper;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemEntity;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ru.practicum.shareit.item.mapper.ItemMapper.makeItemDto;
 
-@RequiredArgsConstructor
+@UtilityClass
 public class BookingMapper {
-    private static ItemRepository itemRepository;
-    private static UserRepository userRepository;
-
     public static Booking makeBooking(BookingDto bookingDto) {
         Booking booking = new Booking();
         booking.setStart(bookingDto.getStart());
@@ -44,6 +39,7 @@ public class BookingMapper {
 
     public static List<BookingDto> listToBookingDto(List<Booking> bookings) {
         List<BookingDto> dtos = new ArrayList<>();
+
         for (Booking booking : bookings) {
             dtos.add(makeBookingDto(booking));
         }

@@ -145,7 +145,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional
-    public CommentDto createComment(CommentDto commentDto, Long userId, Long itemId) throws BadRequestException {
+    public CommentDto createComment(CommentDto commentDto, Long userId, Long itemId) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Item.createComment)");
         }
@@ -176,7 +176,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public ItemDto createItem(Long userId, ItemDto itemDto) throws BadRequestException {
+    public ItemDto createItem(Long userId, ItemDto itemDto) {
         User owner = userRepository.getById(userId);
 
         if (itemDto.getAvailable() == null) {

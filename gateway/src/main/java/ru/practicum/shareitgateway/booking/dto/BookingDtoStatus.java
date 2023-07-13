@@ -1,6 +1,6 @@
 package ru.practicum.shareitgateway.booking.dto;
 
-public enum BookingStatus {
+public enum BookingDtoStatus {
     WAITING,
     APPROVED,
     REJECTED,

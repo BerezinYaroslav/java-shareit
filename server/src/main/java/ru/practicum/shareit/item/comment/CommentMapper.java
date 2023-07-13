@@ -1,17 +1,12 @@
 package ru.practicum.shareit.item.comment;
 
-import lombok.RequiredArgsConstructor;
-import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.user.UserRepository;
+import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
+@UtilityClass
 public class CommentMapper {
-    private static ItemRepository itemRepository;
-    private static UserRepository userRepository;
-
     public static Comment makeComment(CommentDto commentDto) {
         Comment comment = new Comment();
         comment.setId(commentDto.getId());

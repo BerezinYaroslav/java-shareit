@@ -2,20 +2,17 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.user.Service.UserService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/users")
-@Component
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -27,13 +24,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Long id) throws BadRequestException {
+    public UserDto getUserById(@PathVariable Long id) {
         log.info("User получен(UserController): {}", id);
         return userService.getUserById(id);
     }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody UserDto user) throws CloneNotSupportedException, BadRequestException {
+    public User createUser(@RequestBody UserDto user) throws CloneNotSupportedException {
         log.info("User добавлен(UserController): {}", user);
         return userService.createUser(user);
     }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class BookingEntity {
+public class BookingDtoEntity {
     private Long id;
 
     @FutureOrPresent

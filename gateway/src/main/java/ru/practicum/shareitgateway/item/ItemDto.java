@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareitgateway.booking.dto.BookingItemEntity;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,11 +19,9 @@ public class ItemDto {
 
     private Boolean available;
 
-    private BookingItemEntity lastBooking;
+    private Long lastBookingId;
 
-    private BookingItemEntity nextBooking;
-
-    private List<CommentDto> comments;
+    private Long nextBookingId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long requestId;

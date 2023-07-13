@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.BookingState;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingEntity;
@@ -39,7 +40,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingDto createBooking(Long userId, BookingEntity bookingEntity) throws BadRequestException {
+    public BookingDto createBooking(Long userId, BookingEntity bookingEntity) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
@@ -80,7 +81,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingDto bookingStatus(Long userId, Long bookingId, Boolean approve) throws BadRequestException {
+    public BookingDto bookingStatus(Long userId, Long bookingId, Boolean approve) {
         Booking booking = bookingRepository.getById(bookingId);
 
         if (!booking.getItem().getOwner().getId().equals(userId)) {
@@ -118,7 +119,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public List<BookingDto> getBookingsOwner(Long userId, String state, Integer from, Integer size) throws BadRequestException {
+    public List<BookingDto> getBookingsOwner(Long userId, String state, Integer from, Integer size) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
@@ -126,25 +127,27 @@ public class BookingServiceImpl implements BookingService {
         int page = from >= 0 ? Math.round((float) from / size) : -1;
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
 
-        switch (state) {
-            case "ALL":
+        BookingState bookingState = BookingState.valueOf(state);
+
+        switch (bookingState) {
+            case ALL:
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdOrderByDesc(userId, pageable));
-            case "CURRENT":
+            case CURRENT:
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdAndStartBeforeAndEndAfterOrderByDesc(
                         userId, LocalDateTime.now(), LocalDateTime.now(), pageable));
-            case "PAST":
+            case PAST:
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdAndEndBeforeOrderByDesc(userId,
                         LocalDateTime.now(), pageable));
-            case "FUTURE":
+            case FUTURE:
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdAndBookerStartAfterOrderByDesc(userId,
                         LocalDateTime.now(), pageable));
-            case "WAITING":
+            case WAITING:
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdAndBookerStatusWaitingOrderByDesc(
                         userId, BookingStatus.WAITING, pageable));
-            case "REJECTED":
+            case REJECTED:
                 return listToBookingDto(bookingRepository.findAllByBookerOwnerIdAndBookerStatusRejectedOrderByDesc(
                         userId, BookingStatus.REJECTED, pageable));
-            case "UNSUPPORTED_STATUS":
+            case UNSUPPORTED_STATUS:
                 throw new BadRequestException("Unknown state: UNSUPPORTED_STATUS");
         }
         return null;
@@ -152,7 +155,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public List<BookingDto> getBookingState(Long userId, String state, Integer from, Integer size) throws BadRequestException {
+    public List<BookingDto> getBookingState(Long userId, String state, Integer from, Integer size) {
         if (userId > userService.returnId()) {
             throw new NotFoundException("Данного юзера не существует (Booking.create)");
         }
@@ -160,25 +163,27 @@ public class BookingServiceImpl implements BookingService {
         int page = from >= 0 ? Math.round((float) from / size) : -1;
         Pageable pageable = PageRequest.of(page, size).withSort(Sort.by("id").descending());
 
-        switch (state) {
-            case "ALL":
+        BookingState bookingState = BookingState.valueOf(state);
+
+        switch (bookingState) {
+            case ALL:
                 return listToBookingDto(bookingRepository.findAllByBookerIdOrderByDesc(userId, pageable));
-            case "CURRENT":
+            case CURRENT:
                 return listToBookingDto(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfterOrderByDesc(userId,
                         LocalDateTime.now(), LocalDateTime.now(), pageable));
-            case "PAST":
+            case PAST:
                 return listToBookingDto(bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByDesc(userId,
                         LocalDateTime.now(), pageable));
-            case "FUTURE":
+            case FUTURE:
                 return listToBookingDto(bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId,
                         LocalDateTime.now(), pageable));
-            case "WAITING":
+            case WAITING:
                 return listToBookingDto(bookingRepository.findAllByBookerIdAndBookerStatusWaitingOrderByDesc(userId,
                         BookingStatus.WAITING, pageable));
-            case "REJECTED":
+            case REJECTED:
                 return listToBookingDto(bookingRepository.findAllByBookerIdAndBookerStatusRejectedOrderByDesc(userId,
                         BookingStatus.REJECTED, pageable));
-            case "UNSUPPORTED_STATUS":
+            case UNSUPPORTED_STATUS:
                 throw new BadRequestException("Unknown state: UNSUPPORTED_STATUS");
         }
         return null;

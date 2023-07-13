@@ -10,10 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    Item save(Item item);
-
-    Item getById(Long id);
-
     @Query("select it " +
             "from Item as it " +
             "order by it.id asc")

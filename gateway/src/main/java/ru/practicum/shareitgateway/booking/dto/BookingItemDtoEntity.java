@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingItemEntity {
+public class BookingItemDtoEntity {
     private Long id;
-
     private Long bookerId;
 }

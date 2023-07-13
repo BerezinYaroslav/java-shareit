@@ -7,10 +7,4 @@ import ru.practicum.shareit.user.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, CrudRepository<User, Long> {
-    @Override
-    User getOne(Long id);
-
-    User getById(Long id);
-
-    User save(User user);
 }

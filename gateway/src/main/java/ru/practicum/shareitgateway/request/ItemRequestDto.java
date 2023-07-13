@@ -1,33 +1,28 @@
 package ru.practicum.shareitgateway.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import ru.practicum.shareitgateway.item.ItemDto;
-import ru.practicum.shareitgateway.user.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ItemRequestDto {
-    Long id;
+    private Long id;
 
     @NotBlank
     @Size(max = 250)
-    String description;
+    private String description;
 
-    User requestor;
+    private Long requestorId;
 
-    @DateTimeFormat
-    LocalDateTime created;
-
-    List<ItemDto> items;
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private LocalDateTime created;
 }

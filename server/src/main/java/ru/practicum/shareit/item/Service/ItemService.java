@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.Service;
 
-import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.item.comment.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
@@ -13,11 +12,11 @@ public interface ItemService {
 
     List<ItemDto> getItemsText(String text, Integer from, Integer size);
 
-    ItemDto createItem(Long userId, ItemDto itemDto) throws BadRequestException;
+    ItemDto createItem(Long userId, ItemDto itemDto);
 
-    public CommentDto createComment(CommentDto commentDto, Long userId, Long itemId) throws BadRequestException;
+    public CommentDto createComment(CommentDto commentDto, Long userId, Long itemId);
 
-    ItemDto updateItemById(Long userId, Long id, ItemDto item) throws CloneNotSupportedException, BadRequestException;
+    ItemDto updateItemById(Long userId, Long id, ItemDto item) throws CloneNotSupportedException;
 
     void deleteItemById(Long id);
 
